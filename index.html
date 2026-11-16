@@ -238,6 +238,16 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 .lrow small{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .lrow .v{font-family:var(--display);font-weight:700;font-size:18px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sec{font-size:22px;margin-top:6px}
+.wide{width:100%;min-height:52px;font-size:15px}
+.form{display:flex;flex-direction:column;gap:14px}
+.form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.form input,.form select{min-height:50px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 17px var(--body);padding:0 12px;width:100%;-webkit-appearance:none;appearance:none}
+.form .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form .err{color:var(--stop);font-size:13px;margin:0;min-height:18px}
+.danger{color:var(--stop)!important}
+.hrow{width:100%;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.hrow .v{text-align:left;font-size:17px;color:var(--fg)}
+.watchtag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--rest-soft);color:var(--rest);font-size:10.5px;font-weight:700;vertical-align:1px}
 @media (max-width:380px){.hero h1{font-size:38px}.pname{font-size:30px}.rules{grid-template-columns:1fr 1fr 1fr}.st{grid-template-columns:22px 78px minmax(0,1fr) auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -283,12 +293,17 @@ details.g[open] summary .plus{transform:rotate(45deg)}
   <button class="linkbtn" id="legsOff" hidden>Re-verrouiller le bloc jambes</button>
   <p class="hint">Touche un exercice pour voir le tuto. Le chrono enchaîne échauffement, séries, repos et étirements.</p>
   <button class="cta" id="startBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Démarrer</button>
+  <button class="ghost wide" id="doneBtn">J’ai fait cette séance</button>
 </section>
 
 <!-- PROGRÈS -->
 <section class="view" id="v-prog" hidden aria-label="Progrès">
   <div class="dhead"><p class="eyebrow">Tes chiffres</p><h1>Progrès</h1></div>
   <div class="pstats" id="pgStats"></div>
+
+  <h2 class="sec">Historique</h2>
+  <p class="hint" id="histEmpty">Tes séances apparaîtront ici. Touche une séance pour ajouter ou corriger sa durée, ses calories et ta fréquence cardiaque.</p>
+  <div class="loglist" id="histList" hidden></div>
 
   <h2 class="sec">Tests</h2>
   <div class="card">
@@ -444,6 +459,7 @@ details.g[open] summary .plus{transform:rotate(45deg)}
       <div class="medal"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg></div>
       <div class="pname" id="dnTitle">Séance terminée</div>
       <p class="psub" id="dnText"></p>
+      <button class="ghost" id="dnWatch">Ajouter les données de ma montre</button>
       <button class="cta" id="dnBack" style="max-width:320px">Retour aux séances</button>
     </div>
 
@@ -719,6 +735,56 @@ function openTuto(id){
  $('#scrim').hidden=false;$('#sheet').hidden=false;document.documentElement.style.overflow='hidden';$('#sheet').scrollTop=0;
  $('#tClose').addEventListener('click',closeTuto);$('#tClose').focus();
 }
+/* ---------- Noter une séance (montre) ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const dayStr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+function openLog(sid,idx){
+ lastFocus=document.activeElement;
+ const h=store.get('hist',[]),ed=idx!=null&&h[idx]?h[idx]:null,sel=ed?ed.sid:sid;
+ const d=ed?new Date(ed.date):new Date();
+ const opts=['A','B','X','J'].filter(k=>k!=='J'||legs||sel==='J').map(k=>`<option value="${k}"${k===sel?' selected':''}>${SESS[k].eye} · ${SESS[k].title}</option>`).join('');
+ $('#sheetIn').innerHTML=`<div class="grab"></div>
+ <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><div style="min-width:0;display:flex;flex-direction:column;gap:8px"><span class="eyebrow">${ed?'Modifier la séance':'Noter une séance faite'}</span><h2 id="tTitle">Données de ta séance</h2></div><button class="icon" id="tClose" aria-label="Fermer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+ <form class="form" id="fLog" novalidate>
+  <label for="fSid">Séance<select id="fSid">${opts}</select></label>
+  <label for="fDate">Date<input id="fDate" type="date" value="${dayStr(d)}" max="${dayStr(new Date())}"></label>
+  <label for="fDur">Temps de travail (min)<input id="fDur" type="number" inputmode="numeric" min="1" max="300" placeholder="ex. 24" value="${ed&&ed.dur?Math.round(ed.dur/60):''}"></label>
+  <div class="two">
+   <label for="fKcal">Calories (kcal)<input id="fKcal" type="number" inputmode="numeric" min="0" max="3000" placeholder="ex. 210" value="${ed&&ed.kcal?ed.kcal:''}"></label>
+   <label for="fHr">FC moyenne (bpm)<input id="fHr" type="number" inputmode="numeric" min="40" max="220" placeholder="ex. 118" value="${ed&&ed.hr?ed.hr:''}"></label>
+  </div>
+  <p class="hint" style="margin:0">Recopie les chiffres affichés par ta Suunto à la fin de l’activité. Calories et fréquence cardiaque sont facultatives.</p>
+  <p class="err" id="fErr" role="alert"></p>
+  <button class="cta" type="submit">Enregistrer</button>
+  ${ed?'<button class="ghost wide danger" type="button" id="fDel">Supprimer cette séance</button>':''}
+ </form>`;
+ $('#scrim').hidden=false;$('#sheet').hidden=false;document.documentElement.style.overflow='hidden';$('#sheet').scrollTop=0;
+ $('#tClose').addEventListener('click',closeTuto);
+ let delArmed=false;
+ if(ed)$('#fDel').addEventListener('click',()=>{if(!delArmed){delArmed=true;$('#fDel').textContent='Toucher encore pour confirmer';return;}
+  const H=store.get('hist',[]);H.splice(idx,1);store.set('hist',H);closeTuto();renderHome();if(!$('#v-prog').hidden)renderProg();});
+ $('#fLog').addEventListener('submit',ev=>{ev.preventDefault();
+  const num=id=>{const v=$(id).value.trim();return v===''?null:Number(v);};
+  const dur=num('#fDur'),kcal=num('#fKcal'),hr=num('#fHr'),ds=$('#fDate').value;
+  const err=m=>{$('#fErr').textContent=m;};
+  if(!ds)return err('Choisis la date de la séance.');
+  if(dur==null||!(dur>=1&&dur<=300))return err('Indique le temps de travail en minutes, entre 1 et 300.');
+  if(kcal!=null&&!(kcal>=0&&kcal<=3000))return err('Les calories doivent être entre 0 et 3000.');
+  if(hr!=null&&!(hr>=40&&hr<=220))return err('La fréquence cardiaque moyenne doit être entre 40 et 220 bpm.');
+  const [Y,M,D]=ds.split('-').map(Number);const now=new Date();
+  const when=ed?new Date(ed.date):(dayStr(now)===ds?now:new Date(Y,M-1,D,18,30));when.setFullYear(Y,M-1,D);
+  const H=store.get('hist',[]);
+  const entry=Object.assign({},ed||{week,cycle,manual:true},{sid:$('#fSid').value,date:when.toISOString(),dur:Math.round(dur*60),kcal:kcal!=null?Math.round(kcal):undefined,hr:hr!=null?Math.round(hr):undefined,watch:kcal!=null||hr!=null||undefined});
+  if(ed)H[idx]=entry;else H.push(entry);
+  H.sort((a,b)=>new Date(a.date)-new Date(b.date));store.set('hist',H.slice(-120));
+  closeTuto();renderHome();if(!$('#v-prog').hidden)renderProg();
+  if(!$('#pDone').hidden&&!$('#player').hidden)$('#dnText').textContent='Données de ta montre enregistrées : '+Math.round(dur)+' min'+(kcal!=null?' · '+Math.round(kcal)+' kcal':'')+(hr!=null?' · '+Math.round(hr)+' bpm':'')+'.';
+ });
+ setTimeout(()=>{try{$('#fDur').focus({preventScroll:true});}catch(e){}},50);
+}
+$('#doneBtn').addEventListener('click',()=>openLog(curS,null));
+$('#dnWatch').addEventListener('click',()=>{const H=store.get('hist',[]);openLog(null,H.length?H.length-1:null);});
+document.addEventListener('click',e=>{const b=e.target.closest('#histList [data-i]');if(b)openLog(null,+b.dataset.i);});
 function closeTuto(){$('#scrim').hidden=true;$('#sheet').hidden=true;document.documentElement.style.overflow='';try{lastFocus&&lastFocus.focus({preventScroll:true});}catch(e){}}
 $('#scrim').addEventListener('click',closeTuto);
 
@@ -728,7 +794,12 @@ const dshort=d=>new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'sho
 function renderProg(){
  const h=store.get('hist',[]),wk=Date.now()-7*864e5;
  const mins=Math.round(h.reduce((a,x)=>a+(x.dur||0),0)/60);
- $('#pgStats').innerHTML=[[h.length,'séances'],[mins,'minutes'],[h.filter(x=>new Date(x.date).getTime()>wk).length,'sur 7 jours']].map(s=>`<div class="dstat"><b class="num">${s[0]}</b><span>${s[1]}</span></div>`).join('');
+ const kcal=h.reduce((a,x)=>a+(+x.kcal||0),0);
+ $('#pgStats').innerHTML=[[h.length,'séances'],[mins,'minutes'],[kcal?kcal.toLocaleString('fr-FR'):'—','kcal']].map(s=>`<div class="dstat"><b class="num">${s[0]}</b><span>${s[1]}</span></div>`).join('');
+ const hl=$('#histList');$('#histEmpty').hidden=!!h.length;hl.hidden=!h.length;
+ hl.innerHTML=h.map((x,i)=>({x,i})).reverse().slice(0,30).map(({x,i})=>{const S=SESS[x.sid]||SESS.A;
+  const bits=[Math.round((x.dur||0)/60)+' min'];if(x.kcal)bits.push(x.kcal+' kcal');if(x.hr)bits.push(x.hr+' bpm');
+  return `<button class="lrow hrow" data-i="${i}"><span style="min-width:0"><strong>${S.eye} · ${S.title}${x.watch?'<span class="watchtag">MONTRE</span>':''}</strong><small>${new Date(x.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})} · ${x.cycle===2?'cycle 2 · ':''}semaine ${x.week||'?'}${x.manual?' · notée à la main':''}</small></span><span class="v">${bits.join(' · ')}</span></button>`;}).join('');
  const T=store.get('tests',[]);
  if(tp==null)tp=T.length?T[T.length-1].push:10;
  $('#tpVal').textContent=tp;
