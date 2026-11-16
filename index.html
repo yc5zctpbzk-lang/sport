@@ -243,6 +243,7 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 .form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
 .form input,.form select{min-height:50px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 17px var(--body);padding:0 12px;width:100%;-webkit-appearance:none;appearance:none}
 .form .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form .lg{font-size:13px;font-weight:600;color:var(--muted);padding:0;margin-bottom:6px;grid-column:1/-1}
 .form .err{color:var(--stop);font-size:13px;margin:0;min-height:18px}
 .danger{color:var(--stop)!important}
 .hrow{width:100%;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
@@ -681,7 +682,7 @@ function renderHome(){
  if(run){$('#resumeBar').hidden=false;$('#rsTitle').textContent='Reprendre '+SESS[run.sid].eye;$('#rsText').textContent='Séance interrompue · étape '+(run.i+1)+' sur '+build2(run).length;}else $('#resumeBar').hidden=true;
  const h=store.get('hist',[]);
  if(h.length){const l=h[h.length-1];const d=new Date(l.date);const wk=Date.now()-7*864e5;const cnt=h.filter(x=>new Date(x.date).getTime()>wk).length;
-  $('#lastLine').innerHTML=`<i></i>Dernière : ${SESS[l.sid].eye}, ${d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'short'})}, ${Math.round(l.dur/60)} min · ${cnt} séance${cnt>1?'s':''} sur 7 jours`;$('#lastLine').hidden=false;}
+  $('#lastLine').innerHTML=`<i></i>Dernière : ${SESS[l.sid].eye}, ${d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'short'})}, ${durTxt(l.dur)} · ${cnt} séance${cnt>1?'s':''} sur 7 jours`;$('#lastLine').hidden=false;}
 }
 function calWeek(){const d=(Date.now()-new Date(2026,10,16).getTime())/864e5;if(d<0)return 0;const w=Math.floor(d/7)+1;return w<=8?w:0;}
 function getRun(){const r=store.get('run',null);return r&&r.sid&&Date.now()-r.t<4*3600e3?r:null;}
@@ -737,6 +738,7 @@ function openTuto(id){
 }
 /* ---------- Noter une séance (montre) ---------- */
 const pad=n=>String(n).padStart(2,'0');
+const durTxt=d=>{d=Math.round(d||0);const m=Math.floor(d/60),r=d%60;return r?m+' min '+pad(r)+' s':m+' min';};
 const dayStr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 function openLog(sid,idx){
  lastFocus=document.activeElement;
@@ -748,7 +750,10 @@ function openLog(sid,idx){
  <form class="form" id="fLog" novalidate>
   <label for="fSid">Séance<select id="fSid">${opts}</select></label>
   <label for="fDate">Date<input id="fDate" type="date" value="${dayStr(d)}" max="${dayStr(new Date())}"></label>
-  <label for="fDur">Temps de travail (min)<input id="fDur" type="number" inputmode="numeric" min="1" max="300" placeholder="ex. 24" value="${ed&&ed.dur?Math.round(ed.dur/60):''}"></label>
+  <fieldset class="two" style="border:0;margin:0;padding:0"><legend class="lg">Temps de travail</legend>
+   <label for="fMin">Minutes<input id="fMin" type="number" inputmode="numeric" min="0" max="300" placeholder="ex. 24" value="${ed&&ed.dur!=null?Math.floor(ed.dur/60):''}"></label>
+   <label for="fSec">Secondes<input id="fSec" type="number" inputmode="numeric" min="0" max="59" placeholder="ex. 35" value="${ed&&ed.dur!=null?ed.dur%60:''}"></label>
+  </fieldset>
   <div class="two">
    <label for="fKcal">Calories (kcal)<input id="fKcal" type="number" inputmode="numeric" min="0" max="3000" placeholder="ex. 210" value="${ed&&ed.kcal?ed.kcal:''}"></label>
    <label for="fHr">FC moyenne (bpm)<input id="fHr" type="number" inputmode="numeric" min="40" max="220" placeholder="ex. 118" value="${ed&&ed.hr?ed.hr:''}"></label>
@@ -765,22 +770,25 @@ function openLog(sid,idx){
   const H=store.get('hist',[]);H.splice(idx,1);store.set('hist',H);closeTuto();renderHome();if(!$('#v-prog').hidden)renderProg();});
  $('#fLog').addEventListener('submit',ev=>{ev.preventDefault();
   const num=id=>{const v=$(id).value.trim();return v===''?null:Number(v);};
-  const dur=num('#fDur'),kcal=num('#fKcal'),hr=num('#fHr'),ds=$('#fDate').value;
+  const mi=num('#fMin'),se=num('#fSec'),kcal=num('#fKcal'),hr=num('#fHr'),ds=$('#fDate').value;
   const err=m=>{$('#fErr').textContent=m;};
   if(!ds)return err('Choisis la date de la séance.');
-  if(dur==null||!(dur>=1&&dur<=300))return err('Indique le temps de travail en minutes, entre 1 et 300.');
+  if(mi==null&&se==null)return err('Indique le temps de travail : minutes et secondes.');
+  if(mi!=null&&!(Number.isInteger(mi)&&mi>=0&&mi<=300))return err('Les minutes doivent être un nombre entier entre 0 et 300.');
+  if(se!=null&&!(Number.isInteger(se)&&se>=0&&se<=59))return err('Les secondes doivent être un nombre entier entre 0 et 59.');
+  const dur=(mi||0)*60+(se||0);if(dur<30)return err('Le temps de travail doit faire au moins 30 secondes.');
   if(kcal!=null&&!(kcal>=0&&kcal<=3000))return err('Les calories doivent être entre 0 et 3000.');
   if(hr!=null&&!(hr>=40&&hr<=220))return err('La fréquence cardiaque moyenne doit être entre 40 et 220 bpm.');
   const [Y,M,D]=ds.split('-').map(Number);const now=new Date();
   const when=ed?new Date(ed.date):(dayStr(now)===ds?now:new Date(Y,M-1,D,18,30));when.setFullYear(Y,M-1,D);
   const H=store.get('hist',[]);
-  const entry=Object.assign({},ed||{week,cycle,manual:true},{sid:$('#fSid').value,date:when.toISOString(),dur:Math.round(dur*60),kcal:kcal!=null?Math.round(kcal):undefined,hr:hr!=null?Math.round(hr):undefined,watch:kcal!=null||hr!=null||undefined});
+  const entry=Object.assign({},ed||{week,cycle,manual:true},{sid:$('#fSid').value,date:when.toISOString(),dur:dur,kcal:kcal!=null?Math.round(kcal):undefined,hr:hr!=null?Math.round(hr):undefined,watch:kcal!=null||hr!=null||undefined});
   if(ed)H[idx]=entry;else H.push(entry);
   H.sort((a,b)=>new Date(a.date)-new Date(b.date));store.set('hist',H.slice(-120));
   closeTuto();renderHome();if(!$('#v-prog').hidden)renderProg();
-  if(!$('#pDone').hidden&&!$('#player').hidden)$('#dnText').textContent='Données de ta montre enregistrées : '+Math.round(dur)+' min'+(kcal!=null?' · '+Math.round(kcal)+' kcal':'')+(hr!=null?' · '+Math.round(hr)+' bpm':'')+'.';
+  if(!$('#pDone').hidden&&!$('#player').hidden)$('#dnText').textContent='Données de ta montre enregistrées : '+durTxt(dur)+(kcal!=null?' · '+Math.round(kcal)+' kcal':'')+(hr!=null?' · '+Math.round(hr)+' bpm':'')+'.';
  });
- setTimeout(()=>{try{$('#fDur').focus({preventScroll:true});}catch(e){}},50);
+ setTimeout(()=>{try{$('#fMin').focus({preventScroll:true});}catch(e){}},50);
 }
 $('#doneBtn').addEventListener('click',()=>openLog(curS,null));
 $('#dnWatch').addEventListener('click',()=>{const H=store.get('hist',[]);openLog(null,H.length?H.length-1:null);});
@@ -798,7 +806,7 @@ function renderProg(){
  $('#pgStats').innerHTML=[[h.length,'séances'],[mins,'minutes'],[kcal?kcal.toLocaleString('fr-FR'):'—','kcal']].map(s=>`<div class="dstat"><b class="num">${s[0]}</b><span>${s[1]}</span></div>`).join('');
  const hl=$('#histList');$('#histEmpty').hidden=!!h.length;hl.hidden=!h.length;
  hl.innerHTML=h.map((x,i)=>({x,i})).reverse().slice(0,30).map(({x,i})=>{const S=SESS[x.sid]||SESS.A;
-  const bits=[Math.round((x.dur||0)/60)+' min'];if(x.kcal)bits.push(x.kcal+' kcal');if(x.hr)bits.push(x.hr+' bpm');
+  const bits=[durTxt(x.dur)];if(x.kcal)bits.push(x.kcal+' kcal');if(x.hr)bits.push(x.hr+' bpm');
   return `<button class="lrow hrow" data-i="${i}"><span style="min-width:0"><strong>${S.eye} · ${S.title}${x.watch?'<span class="watchtag">MONTRE</span>':''}</strong><small>${new Date(x.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})} · ${x.cycle===2?'cycle 2 · ':''}semaine ${x.week||'?'}${x.manual?' · notée à la main':''}</small></span><span class="v">${bits.join(' · ')}</span></button>`;}).join('');
  const T=store.get('tests',[]);
  if(tp==null)tp=T.length?T[T.length-1].push:10;
@@ -1009,7 +1017,7 @@ function finish(){
  $('#player').dataset.mode='effort';$('#pBar').style.width='100%';
  $('#pMain').hidden=true;$('#pFoot').hidden=true;$('#pOver').hidden=true;$('#pDone').hidden=false;
  $('#dnTitle').textContent=SESS[P.sid].eye+' terminée';
- $('#dnText').textContent='En '+Math.round(dur/60)+' min. Bois un verre d’eau. Prochaine séance après un jour de repos si possible.';
+ $('#dnText').textContent='En '+durTxt(dur)+'. Bois un verre d’eau. Prochaine séance après un jour de repos si possible.';
  endBeep();unlockScreen();
 }
 $('#pMainBtn').addEventListener('click',primary);
