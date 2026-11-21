@@ -1001,9 +1001,10 @@ function mAmbStart(){if(!actx||MP.ambNodes)return;try{
 function mAmbLevel(){if(!MP||!MP.ambNodes||!actx)return;const on=MP.amb&&!MP.pausedAt;try{const g=MP.ambNodes.master.gain,t=actx.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(Math.max(.0001,g.value),t);g.exponentialRampToValueAtTime(on?.09:.0001,t+(on?2.5:.8));}catch(e){}}
 function mAmbStop(){if(!MP||!MP.ambNodes)return;const n=MP.ambNodes;MP.ambNodes=null;try{n.master.gain.setTargetAtTime(.0001,actx.currentTime,.3);setTimeout(()=>{try{n.src.stop();n.lfo.stop();n.pads.forEach(o=>o.stop());n.master.disconnect();}catch(e){}},1500);}catch(e){}}
 function mStart(n,min){
+ if(MP){clearInterval(MP.timer);cancelAnimationFrame(MP.raf);mAmbStop();try{speechSynthesis.cancel();}catch(e){}}
  const m=MED[n-1],D=min*60;ensureAudio();lockScreen();
  MP={m,D,cues:mScript(m,D),idx:0,start:Date.now(),pausedAt:null,pausedAcc:0,voice:store.get('mvoice',true)!==false,amb:m.quiet?false:store.get('mamb',true)!==false,capUntil:0,stars:null,raf:0,timer:0,saved:false};
- document.documentElement.style.setProperty('--mc',m.mc);$('#mPlayer').style.setProperty('--mc',m.mc);
+ $('#mPlayer').style.setProperty('--mc',m.mc);
  $('#mTitle').textContent=m.title;$('#mQuit').hidden=true;$('#mDone').hidden=true;$('#mCap').classList.remove('show');$('#mLabel').textContent='';
  $('#mPlayer').hidden=false;document.body.style.overflow='hidden';
  mVoiceObj=frVoice();if(MP.voice){try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);}catch(e){}}
@@ -1011,11 +1012,17 @@ function mStart(n,min){
 }
 function mTick(){
  if(!MP||MP.pausedAt)return;const e=mNow();
+ let missed=null,fired=false;
  while(MP.idx<MP.cues.length&&MP.cues[MP.idx].t<=e){const c=MP.cues[MP.idx++];
+  // retour après un écran verrouillé : on saute les consignes dépassées au lieu de toutes les dire d'un coup
+  if(c.k!=='end'&&c.t<e-3){if(c.k==='say')missed=c;continue;}
+  if(c.k==='say')fired=true;
   if(c.k==='bell')mBell();
   else if(c.k==='say'){$('#mCap').textContent=c.x;$('#mCap').classList.add('show');MP.capUntil=e+15;mSay(c.x);}
   else if(c.k==='cue'){mSay(c.x);}
   else if(c.k==='end'){mFinish(true);return;}}
+ // … mais on redonne la dernière consigne manquée, pour se resituer
+ if(missed&&!fired){$('#mCap').textContent=missed.x;$('#mCap').classList.add('show');MP.capUntil=e+15;mSay(missed.x);}
  if(MP.capUntil&&e>MP.capUntil){$('#mCap').classList.remove('show');MP.capUntil=0;}
  if(MP.m.paced&&e>=PACE0){const p=(e-PACE0)%10;const up=p<5;if(MP.lastUp!==up){MP.lastUp=up;mPaceTone(up);}}
  mPaint();
@@ -1030,7 +1037,10 @@ function mPaint(){if(!MP)return;const e=Math.min(mNow(),MP.D);
  $('#mAmb').setAttribute('aria-pressed',String(MP.amb));$('#mVoice').setAttribute('aria-pressed',String(MP.voice));
  let lab='';if(paused)lab='En pause';else if(MP.m.paced&&e>=PACE0)lab=((e-PACE0)%10)<5?'Inspire':'Expire';$('#mLabel').textContent=lab;}
 function mDraw(){
- if(!MP||$('#mPlayer').hidden)return;const cv=$('#mCanvas'),dpr=Math.min(2,window.devicePixelRatio||1),W=cv.clientWidth,H=cv.clientHeight;
+ if(!MP||$('#mPlayer').hidden)return;
+ // à l'arrêt (pause, fin), l'image est figée : on ne redessine plus, pour économiser la batterie
+ if(MP.pausedAt&&MP.drawnAt===MP.pausedAt){MP.raf=requestAnimationFrame(mDraw);return;}
+ MP.drawnAt=MP.pausedAt;const cv=$('#mCanvas'),dpr=Math.min(2,window.devicePixelRatio||1),W=cv.clientWidth,H=cv.clientHeight;
  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);MP.stars=null;}
  const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);const e=mNow(),col=MP.m.mc;
  const bg=x.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#05070B');bg.addColorStop(1,'#0C1018');x.fillStyle=bg;x.fillRect(0,0,W,H);
@@ -1045,7 +1055,10 @@ function mDraw(){
 function mixW(h,k){const n=parseInt(h.slice(1),16),m=c=>Math.round(c+(255-c)*k);return 'rgb('+m(n>>16&255)+','+m(n>>8&255)+','+m(n&255)+')';}
 function hexA(h,a){const n=parseInt(h.slice(1),16);return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')';}
 function mPause(){if(!MP||MP.pausedAt)return;MP.pausedAt=Date.now();try{speechSynthesis.cancel();}catch(e){}mAmbLevel();mPaint();}
-function mResume(){if(!MP||!MP.pausedAt)return;MP.pausedAcc+=Date.now()-MP.pausedAt;MP.pausedAt=null;try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}mAmbLevel();mPaint();}
+function mResume(){if(!MP||!MP.pausedAt)return;MP.pausedAcc+=Date.now()-MP.pausedAt;MP.pausedAt=null;try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}mAmbLevel();
+ // la phrase coupée par la pause est redite à la reprise
+ if(MP.capUntil&&mNow()<MP.capUntil){MP.capUntil=mNow()+15;mSay($('#mCap').textContent);}
+ mPaint();}
 function mSave(){if(!MP||MP.saved)return;const e=Math.min(mNow(),MP.D);if(e<MP.D*.8)return;MP.saved=true;
  const h=mHist();h.push({n:MP.m.n,dur:Math.round(e),date:new Date().toISOString()});store.set('medit',h.slice(-200));}
 function mFinish(done){if(!MP)return;mSave();clearInterval(MP.timer);MP.pausedAt=MP.pausedAt||Date.now();try{speechSynthesis.cancel();}catch(e){}mAmbStop();if(done)setTimeout(mBell,200);
@@ -1054,7 +1067,8 @@ function mFinish(done){if(!MP)return;mSave();clearInterval(MP.timer);MP.pausedAt
  $('#mQuit').hidden=true;$('#mDone').hidden=false;unlockScreen();}
 function mClose(){if(!MP)return;clearInterval(MP.timer);cancelAnimationFrame(MP.raf);mAmbStop();try{speechSynthesis.cancel();}catch(e){}
  MP=null;$('#mPlayer').hidden=true;document.body.style.overflow='';unlockScreen();renderMedit();}
-$('#mPlay').addEventListener('click',()=>{if(!MP)return;ensureAudio();MP.pausedAt?mResume():mPause();});
+let mLastTap=0;
+$('#mPlay').addEventListener('click',()=>{if(!MP)return;const t=Date.now();if(t-mLastTap<450)return;mLastTap=t;ensureAudio();MP.pausedAt?mResume():mPause();});
 $('#mAmb').addEventListener('click',()=>{if(!MP)return;ensureAudio();MP.amb=!MP.amb;if(!MP.m.quiet)store.set('mamb',MP.amb);if(MP.amb)mAmbStart();mAmbLevel();mPaint();});
 $('#mVoice').addEventListener('click',()=>{if(!MP)return;MP.voice=!MP.voice;store.set('mvoice',MP.voice);if(!MP.voice){try{speechSynthesis.cancel();}catch(e){}}mPaint();});
 $('#mClose').addEventListener('click',()=>{if(!MP)return;if(!$('#mDone').hidden){mClose();return;}MP.wasPaused=!!MP.pausedAt;mPause();$('#mQuit').hidden=false;});
