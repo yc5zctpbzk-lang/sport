@@ -120,7 +120,7 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 .tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:var(--surface-2);color:var(--muted)}
 
 /* Nav */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);
   padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
   background:rgba(11,14,19,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
 .nav button{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:52px;justify-content:center;font-size:11.5px;font-weight:600;color:var(--faint)}
@@ -226,6 +226,43 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 .lrow small{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .lrow .v{font-family:var(--display);font-weight:700;font-size:18px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sec{font-size:22px;margin-top:6px}
+/* Méditation */
+.durs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:4px;border-radius:14px;background:var(--surface)}
+.durs button{min-height:48px;border-radius:10px;font-family:var(--display);font-weight:800;font-size:22px;color:var(--muted)}
+.durs button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.mnext{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:20px;background:linear-gradient(160deg,var(--mc,#4FC3F7) -140%,var(--surface) 70%);border:1px solid var(--line)}
+.mnext h3{font-size:28px;font-weight:800;text-transform:uppercase;line-height:1}
+.mnext p{margin:0;color:#D4D9E2;font-size:14px}
+.mlist{display:flex;flex-direction:column;gap:10px}
+.mcard{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;padding:14px 16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);text-align:left}
+.mcard .dot{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:22px;color:#0B0E13;background:var(--mc)}
+.mcard strong{display:block;font-size:16px}
+.mcard small{color:var(--muted);font-size:12.5px}
+.mchip{font-size:11px;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.mchip.ok{background:rgba(91,214,154,.14);color:var(--ok)} .mchip.go{background:var(--rest-soft);color:var(--rest)}
+.mplayer{position:fixed;inset:0;z-index:45;background:#05070B;color:#F1F3F7;overflow:hidden;-webkit-user-select:none;user-select:none}
+.mplayer canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mtop{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:calc(10px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.mtop .icon{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+.mtitle{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.mtitle b{font-family:var(--display);font-size:18px;letter-spacing:.08em;text-transform:uppercase}
+.mtitle small{font-size:13px;color:rgba(241,243,247,.65);font-variant-numeric:tabular-nums}
+.mlabel{position:absolute;left:0;right:0;top:calc(42% + min(31vw,150px) + 14px);text-align:center;font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:rgba(241,243,247,.75);transition:opacity .6s}
+.mcap{position:absolute;left:max(24px,env(safe-area-inset-left,0px));right:max(24px,env(safe-area-inset-right,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px));margin:0 auto;max-width:520px;text-align:center;font-size:19px;line-height:1.45;font-weight:500;color:#F1F3F7;text-shadow:0 2px 14px rgba(0,0,0,.6);opacity:0;transition:opacity 1.2s;text-wrap:balance}
+.mcap.show{opacity:1}
+.mbottom{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:14px;
+  padding:0 max(20px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.mbar{height:4px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden;max-width:520px;width:100%;margin:0 auto}
+.mbar i{display:block;height:100%;width:0;background:var(--mc,#4FC3F7)}
+.mctrl{display:grid;grid-template-columns:1fr 76px 1fr;gap:12px;align-items:center;max-width:520px;width:100%;margin:0 auto}
+.mctrl .tg{min-height:44px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:13px;font-weight:600;color:rgba(241,243,247,.85)}
+.mctrl .tg[aria-pressed="false"]{color:rgba(241,243,247,.45);text-decoration:line-through}
+.mplay{width:76px;height:76px;border-radius:50%;background:#F1F3F7;color:#05070B;display:grid;place-items:center;justify-self:center}
+.mlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;background:rgba(5,7,11,.88);
+  padding:24px max(24px,env(safe-area-inset-right,0px)) 24px max(24px,env(safe-area-inset-left,0px))}
+.mlay h2{font-size:32px;text-transform:uppercase}
+.mlay p{margin:0;color:rgba(241,243,247,.75);max-width:34ch}
 .wide{width:100%;min-height:52px;font-size:15px}
 .form{display:flex;flex-direction:column;gap:14px}
 .form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
@@ -283,6 +320,17 @@ details.g[open] summary .plus{transform:rotate(45deg)}
   <p class="hint">Touche un exercice pour voir le tuto. Le chrono enchaîne échauffement, séries, repos et étirements.</p>
   <button class="cta" id="startBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Démarrer</button>
   <button class="ghost wide" id="doneBtn">J’ai fait cette séance</button>
+</section>
+
+<!-- MÉDITATION -->
+<section class="view" id="v-medit" hidden aria-label="Méditation">
+  <div class="dhead"><p class="eyebrow">Respire · ralentis</p><h1>Méditation</h1><p>8 niveaux guidés, du plus simple au plus ouvert. La voix, l’image et le son sont dans l’appli, même sans réseau.</p></div>
+  <div class="durs" id="mDurs" role="group" aria-label="Durée de la méditation"><button data-d="8" aria-pressed="false">8′</button><button data-d="15" aria-pressed="true">15′</button><button data-d="25" aria-pressed="false">25′</button></div>
+  <div class="mnext" id="mNext"></div>
+  <p class="last" id="mStats" hidden></p>
+  <h2 class="sec">Le programme</h2>
+  <div class="mlist" id="mList"></div>
+  <p class="hint">Assis sur une chaise, pieds à plat : pas de position en tailleur pour ton genou. Le niveau 3 se fait aussi allongé sur le lit. Plus tu avances, plus la voix laisse de silence.</p>
 </section>
 
 <!-- PROGRÈS -->
@@ -399,6 +447,7 @@ details.g[open] summary .plus{transform:rotate(45deg)}
       <li>Une voix annonce chaque exercice et chaque série : tu n’as pas besoin de regarder l’écran. Le bouton haut-parleur coupe bips et voix.</li>
       <li>Si Safari recharge la page pendant une séance, un bouton « Reprendre » te ramène à l’étape où tu étais.</li>
       <li>Pendant une pause, « Reprendre » lance un décompte de 10 à 0 à voix haute pour te remettre en place.</li>
+      <li>Méditation : pour une voix plus naturelle, installe une voix française « améliorée » dans Réglages › Accessibilité › Contenu énoncé › Voix › Français.</li>
       <li>Ta semaine, ton carnet et tes tests sont gardés sur ce téléphone.</li>
     </ul>
   </div></details>
@@ -408,6 +457,7 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 
 <nav class="nav" aria-label="Navigation">
   <button data-v="home" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>Séances</button>
+  <button data-v="medit"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.5c3 2.2 3 4.3 0 5.3M12 20.5c-3-2.2-3-4.3 0-5.3M3.5 12c2.2-3 4.3-3 5.3 0M20.5 12c-2.2 3-4.3 3-5.3 0"/></svg>Méditer</button>
   <button data-v="prog"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M21 20H3"/></svg>Progrès</button>
   <button data-v="guides"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 21H20"/></svg>Guides</button>
 </nav>
@@ -462,6 +512,28 @@ details.g[open] summary .plus{transform:rotate(45deg)}
       <div class="sub2"><button id="pPause"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>Pause</button><button id="pTuto">Comment faire</button><button id="pPlus">+15 s</button></div>
     </div>
   </div>
+</div>
+
+<!-- LECTEUR MÉDITATION -->
+<div class="mplayer" id="mPlayer" hidden role="dialog" aria-label="Méditation en cours">
+  <canvas id="mCanvas" aria-hidden="true"></canvas>
+  <div class="mtop">
+    <button class="icon" id="mClose" aria-label="Arrêter la méditation"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="mtitle"><b id="mTitle">Le souffle</b><small id="mTime">15:00</small></div>
+    <span style="width:44px" aria-hidden="true"></span>
+  </div>
+  <div class="mlabel" id="mLabel"></div>
+  <p class="mcap" id="mCap" aria-live="polite"></p>
+  <div class="mbottom">
+    <div class="mbar"><i id="mBar"></i></div>
+    <div class="mctrl">
+      <button class="tg" id="mAmb" aria-pressed="true">Ambiance</button>
+      <button class="mplay" id="mPlay" aria-label="Pause"><svg id="mIcoPause" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><svg id="mIcoPlay" hidden width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="tg" id="mVoice" aria-pressed="true">Voix</button>
+    </div>
+  </div>
+  <div class="mlay" id="mQuit" hidden><h2>Arrêter ?</h2><p>Ta méditation est en pause. Elle compte comme faite si tu as dépassé 80 % du temps.</p><button class="cta" id="mStay" style="max-width:320px">Continuer</button><button class="ghost" id="mStop">Arrêter</button></div>
+  <div class="mlay" id="mDone" hidden><h2 id="mDoneT">Terminé</h2><p id="mDoneP"></p><button class="cta" id="mBack" style="max-width:320px">Retour</button></div>
 </div>
 
 <!-- FICHE TUTO -->
@@ -830,9 +902,171 @@ $('#tSave').addEventListener('click',()=>{
  const T=store.get('tests',[]);T.push({date:new Date().toISOString(),week,cycle,push:tp,plank:tg.val});store.set('tests',T.slice(-20));
  $('#tMsg').textContent='Tests enregistrés.';renderProg();renderHome();});
 
+/* ---------- Méditation : programme ---------- */
+const MCLOSE=[[62,'Dans un instant, nous allons terminer.'],[48,'Reprends une respiration un peu plus ample.'],[34,'Bouge doucement les doigts, les pieds, la nuque.'],[19,'Garde un peu de ce calme avec toi pour la suite de ta journée.'],[7,'Quand tu es prêt, ouvre les yeux.']];
+const MED=[
+ {n:1,title:'Le souffle',theme:'Respiration naturelle',mc:'#4FC3F7',desc:'Observer la respiration sans la changer. La base de tout le reste.',
+  intro:[[3,'Bienvenue. Installe-toi sur une chaise, le dos droit sans être raide, les deux pieds à plat sur le sol.'],[16,'Pose les mains sur les cuisses. Ferme les yeux, ou laisse ton regard se poser sur le cercle.'],[29,'Prends une grande inspiration par le nez… et relâche lentement par la bouche.'],[42,'Encore une fois. Inspire… et en expirant, laisse tomber les épaules.'],[56,'Maintenant, laisse ta respiration se faire toute seule. Tu n’as rien à changer.']],
+  core:['Remarque l’air qui entre par les narines, un peu plus frais.','Et l’air qui ressort, un peu plus tiède.','Si ton esprit part ailleurs, c’est normal. Remarque-le, puis reviens simplement au souffle.','Compte tes respirations, de un à dix, puis recommence à un.','Sens ton ventre qui se gonfle à l’inspiration, et se relâche à l’expiration.','Tu n’as pas à bien faire. Juste à remarquer.','Chaque fois que tu reviens au souffle, c’est l’exercice lui-même.']},
+ {n:2,title:'L’ancrage',theme:'Le corps posé',mc:'#5BD69A',desc:'Sentir les appuis du corps : les pieds, la chaise, les mains. Pour revenir ici et maintenant.',
+  intro:[[3,'Bienvenue. Assis sur ta chaise, les pieds à plat, les mains posées sur les cuisses.'],[16,'Ferme les yeux si tu le souhaites.'],[26,'Sens le poids de ton corps posé sur la chaise.'],[40,'Remarque tes deux pieds en contact avec le sol.'],[54,'Laisse ta respiration suivre son propre rythme.']],
+  core:['Sens la plante de tes pieds : le talon, la voûte, les orteils.','Remarque les points d’appui sur la chaise : l’arrière des cuisses, les fesses, le dos.','Sens le poids de tes mains posées sur les cuisses.','Laisse le sol et la chaise te porter. Tu n’as rien à tenir.','Quand une pensée t’emmène, reviens à une sensation d’appui : les pieds, les mains.','Remarque la température de l’air sur ton visage, sur tes mains.','Ton genou droit : observe-le avec douceur, sans chercher à changer quoi que ce soit.']},
+ {n:3,title:'Le body scan',theme:'Parcourir le corps',mc:'#B39DFF',ordered:true,desc:'Promener l’attention des pieds jusqu’à la tête, en accueillant chaque sensation. Assis ou allongé sur le lit.',
+  intro:[[3,'Bienvenue. Pour cette séance, tu peux rester assis, ou t’allonger sur ton lit, les jambes allongées.'],[18,'Ferme les yeux. Prends deux respirations un peu plus profondes.'],[32,'Nous allons parcourir le corps, des pieds jusqu’à la tête, comme un faisceau de lumière qui se déplace lentement.'],[50,'Il n’y a rien à ressentir de particulier. Juste remarquer ce qui est là.']],
+  core:['Commence par les pieds. Les orteils, la plante, les talons.','Les chevilles, puis les mollets. Lourds, détendus, ou peut-être tendus.','Les genoux. Le gauche, puis le droit. S’il y a une gêne, accueille-la, respire autour d’elle, sans lutter.','Les cuisses, l’avant puis l’arrière, posées sur leur appui.','Le bassin et les hanches.','Le bas du dos. Laisse-le se déposer.','Le ventre, qui bouge au rythme du souffle.','La poitrine. Peut-être le battement du cœur.','Le haut du dos et les épaules. Laisse-les descendre un peu.','Les bras, jusqu’aux coudes, puis les avant-bras.','Les mains et les doigts. Peut-être des picotements, de la chaleur.','La nuque et la gorge.','Le visage : la mâchoire qui se desserre, les yeux, le front qui se lisse.','Le sommet de la tête.','Et maintenant, le corps entier, d’un seul coup, qui respire.']},
+ {n:4,title:'Cohérence cardiaque',theme:'Respiration rythmée 5 · 5',mc:'#FFB547',paced:true,desc:'Six respirations par minute, guidées par le cercle. Excellent contre le stress et avant de dormir.',
+  intro:[[3,'Bienvenue. Assis, le dos droit, les pieds à plat.'],[14,'Cette séance règle ta respiration sur six respirations par minute. Suis simplement le cercle.'],[28,'Quand le cercle grandit, inspire par le nez. Quand il se resserre, expire doucement.']],
+  core:['Inspire en gonflant le ventre, puis la poitrine.','Expire sans forcer, comme un long soupir.','Si tu manques d’air, respire plus doucement, pas plus fort.','Laisse le cercle donner le rythme. Toi, tu suis.','Remarque le calme qui s’installe dans le corps.']},
+ {n:5,title:'Les sons',theme:'Écouter sans juger',mc:'#4DD0C4',quiet:true,desc:'Accueillir les sons qui t’entourent, proches et lointains, sans les nommer. Ambiance coupée par défaut.',
+  intro:[[3,'Bienvenue. Assis, les pieds à plat, les yeux fermés.'],[15,'Pour cette séance, l’ambiance sonore est coupée : ce sont les sons autour de toi qui deviennent le support.'],[32,'Prends quelques respirations tranquilles.'],[44,'Puis ouvre ton écoute.']],
+  core:['Accueille les sons qui t’entourent, sans les chercher.','Les sons proches… puis les sons plus lointains.','Pas besoin de les nommer. Juste les entendre apparaître, puis disparaître.','Remarque aussi les silences entre les sons.','Si un son te dérange, observe ta réaction, puis reviens à l’écoute.','Laisse les sons venir à toi, comme des vagues.']},
+ {n:6,title:'Les pensées',theme:'Les laisser passer',mc:'#90A4FF',desc:'Regarder les pensées passer comme des nuages, sans s’y accrocher.',
+  intro:[[3,'Bienvenue. Installe-toi, le dos droit, les pieds à plat.'],[15,'Pose ton attention sur le souffle pendant quelques respirations.'],[30,'Aujourd’hui, nous allons observer les pensées elles-mêmes.']],
+  core:['Observe les pensées qui passent, comme des nuages dans le ciel.','Quand une pensée apparaît, note-la simplement : pensée. Puis reviens au souffle.','Tu n’es pas tes pensées. Tu es celui qui les regarde passer.','Certaines pensées reviennent souvent. Accueille-les, sans les suivre.','Pas besoin de faire le vide. Juste ne pas s’accrocher.','Remarque l’espace entre deux pensées.']},
+ {n:7,title:'La bienveillance',theme:'Douceur envers soi',mc:'#FF8FA3',ordered:true,desc:'Se souhaiter du bien, puis aux autres. Particulièrement utile pendant une rééducation.',
+  intro:[[3,'Bienvenue. Installe-toi confortablement, les pieds à plat.'],[15,'Pose une main sur ta poitrine si tu le souhaites, et sens sa chaleur.'],[30,'Nous allons répéter quelques phrases, intérieurement, sans chercher à ressentir quoi que ce soit de précis.'],[48,'Entre deux phrases, continue à les répéter en toi, à ton rythme.']],
+  core:['Que je sois en bonne santé.','Que mon corps guérisse à son rythme.','Que je sois patient avec moi-même.','Que je sois en paix.','Pense maintenant à une personne que tu aimes. Visualise son visage.','Souhaite-lui la même chose : que tu sois en bonne santé, que tu sois en paix.','Élargis à toutes les personnes qui comptent pour toi.','Puis à toutes les personnes que tu croiseras aujourd’hui.','Reviens à toi. Que je sois en paix.']},
+ {n:8,title:'Présence ouverte',theme:'Tout accueillir',mc:'#F1F3F7',desc:'Ne plus choisir de support : souffle, corps, sons et pensées, tout à la fois. Le niveau le plus silencieux.',
+  intro:[[3,'Bienvenue. Installe-toi, le dos droit, les pieds à plat, les yeux fermés.'],[16,'Prends quelques respirations pour arriver.'],[30,'Aujourd’hui, tu n’as pas de support précis.']],
+  core:['Ouvre ton attention à tout ce qui est là : le souffle, le corps, les sons, les pensées.','Ne choisis rien. Laisse chaque chose apparaître et passer.','Si tu te perds, reviens un instant au souffle, puis ouvre à nouveau.','Remarque cette présence tranquille qui observe tout.','Rien à faire, nulle part où aller. Juste être là.','Sens le moment présent, tel qu’il est.']}
+];
+const PACE0=40; // début de la respiration rythmée (niveau 4)
+function mScript(m,D){
+ const c=[{t:0,k:'bell'}];m.intro.forEach(([t,x])=>c.push({t,k:'say',x}));
+ let iEnd=Math.max(...m.intro.map(a=>a[0]))+16;
+ if(m.paced){for(let i=0;i<6;i++){c.push({t:PACE0+i*10,k:'cue',x:'Inspire'});c.push({t:PACE0+i*10+5,k:'cue',x:'Expire'});}iEnd=PACE0+66;}
+ const cEnd=D-70,win=Math.max(30,cEnd-iEnd);
+ let gap=(D<=480?45:D<=900?75:110)*(1+0.06*(m.n-1));
+ const n=m.ordered?m.core.length:Math.max(1,Math.floor(win/gap));
+ const step=win/n;
+ for(let i=0;i<n;i++)c.push({t:Math.round(iEnd+i*step),k:'say',x:m.core[i%m.core.length]});
+ MCLOSE.forEach(([b,x])=>c.push({t:D-b,k:'say',x}));
+ c.push({t:D,k:'end'});
+ return c.sort((a,b)=>a.t-b.t);
+}
+let mDurMin=[8,15,25].includes(+store.get('mdur',15))?+store.get('mdur',15):15;
+const mHist=()=>store.get('medit',[]);
+function mNextLvl(){const h=mHist();for(const m of MED)if(!h.some(x=>x.n===m.n))return m;const c={};h.forEach(x=>c[x.n]=(c[x.n]||0)+1);return MED.slice().sort((a,b)=>(c[a.n]||0)-(c[b.n]||0))[0];}
+function renderMedit(){
+ document.querySelectorAll('#mDurs button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.d===mDurMin)));
+ const h=mHist(),nx=mNextLvl(),allDone=MED.every(m=>h.some(x=>x.n===m.n));
+ $('#mNext').style.setProperty('--mc',nx.mc);
+ $('#mNext').innerHTML=`<span class="eyebrow">${allDone?'Suggestion':'Prochaine étape'} · niveau ${nx.n} sur 8</span><h3>${nx.title}</h3><p>${nx.desc}</p><button class="cta" data-start="${nx.n}" style="background:${nx.mc};color:#0B0E13">Commencer · ${mDurMin} min</button>`;
+ const mins=Math.round(h.reduce((a,x)=>a+(x.dur||0),0)/60);
+ $('#mStats').hidden=!h.length;$('#mStats').innerHTML=`<i></i>${h.length} méditation${h.length>1?'s':''} · ${mins} min au total`;
+ $('#mList').innerHTML=MED.map(m=>{const k=h.filter(x=>x.n===m.n).length;
+  const chip=k?`<span class="mchip ok">Fait${k>1?' ×'+k:''}</span>`:m.n===nx.n?'<span class="mchip go">À faire</span>':m.n>nx.n?'<span class="mchip">À venir</span>':'';
+  return `<button class="mcard" data-m="${m.n}" style="--mc:${m.mc}"><span class="dot">${m.n}</span><span style="min-width:0"><strong>${m.title}</strong><small>${m.theme}</small></span>${chip}</button>`;}).join('');
+}
+$('#mDurs').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;mDurMin=+b.dataset.d;store.set('mdur',mDurMin);renderMedit();});
+$('#mNext').addEventListener('click',e=>{const b=e.target.closest('[data-start]');if(b)mStart(+b.dataset.start,mDurMin);});
+$('#mList').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)openMed(+b.dataset.m);});
+function openMed(n){
+ lastFocus=document.activeElement;const m=MED[n-1];
+ $('#sheetIn').innerHTML=`<div class="grab"></div>
+ <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><div style="min-width:0;display:flex;flex-direction:column;gap:8px"><span class="eyebrow">Niveau ${m.n} sur 8 · ${m.theme}</span><h2 id="tTitle">${m.title}</h2></div><button class="icon" id="tClose" aria-label="Fermer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+ <p style="margin:0">${m.desc}</p>
+ <div class="durs" id="sDurs" role="group" aria-label="Durée">${[8,15,25].map(d=>`<button data-d="${d}" aria-pressed="${d===mDurMin}">${d}′</button>`).join('')}</div>
+ <button class="cta" id="sGo" style="background:${m.mc};color:#0B0E13">Commencer · ${mDurMin} min</button>`;
+ $('#scrim').hidden=false;$('#sheet').hidden=false;document.documentElement.style.overflow='hidden';$('#sheet').scrollTop=0;
+ $('#tClose').addEventListener('click',closeTuto);
+ $('#sDurs').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;mDurMin=+b.dataset.d;store.set('mdur',mDurMin);
+  document.querySelectorAll('#sDurs button').forEach(x=>x.setAttribute('aria-pressed',String(+x.dataset.d===mDurMin)));$('#sGo').textContent='Commencer · '+mDurMin+' min';renderMedit();});
+ $('#sGo').addEventListener('click',()=>{closeTuto();mStart(n,mDurMin);});
+}
+
+/* ---------- Méditation : lecteur ---------- */
+let MP=null;
+const mNow=()=>MP?((MP.pausedAt||Date.now())-MP.start-MP.pausedAcc)/1000:0;
+let mVoiceObj=null;
+function frVoice(){try{const vs=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang));return vs.find(v=>/premium|enhanced|amélie|amelie|audrey|aurélie|thomas|marie|siri/i.test(v.name))||vs.find(v=>/fr[-_]FR/i.test(v.lang))||vs[0]||null;}catch(e){return null;}}
+try{speechSynthesis.addEventListener('voiceschanged',()=>{mVoiceObj=frVoice();});}catch(e){}
+function mSay(t){if(!MP||!MP.voice||!('speechSynthesis' in window))return;try{mVoiceObj=mVoiceObj||frVoice();
+ const go=()=>{const u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';if(mVoiceObj)u.voice=mVoiceObj;u.rate=.86;u.pitch=.95;u.volume=1;speechSynthesis.speak(u);};
+ if(speechSynthesis.speaking||speechSynthesis.pending){speechSynthesis.cancel();setTimeout(go,120);}else go();}catch(e){}}
+function mBell(){if(!actx)return;try{const t=actx.currentTime,f0=196,g=actx.createGain();g.gain.value=1;g.connect(actx.destination);
+ [[1,.22,9],[2.76,.08,6],[5.4,.04,3.5],[8.93,.015,2]].forEach(([r,v,d])=>{const o=actx.createOscillator(),gg=actx.createGain();o.type='sine';o.frequency.value=f0*r;
+  gg.gain.setValueAtTime(.0001,t);gg.gain.exponentialRampToValueAtTime(v,t+.02);gg.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(gg).connect(g);o.start(t);o.stop(t+d+.1);});}catch(e){}}
+function mPaceTone(up){if(!actx||!MP||!MP.amb)return;try{const t=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=up?528:396;
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.035,t+.08);g.gain.exponentialRampToValueAtTime(.0001,t+1.4);o.connect(g).connect(actx.destination);o.start(t);o.stop(t+1.5);}catch(e){}}
+function mAmbStart(){if(!actx||MP.ambNodes)return;try{
+ const len=actx.sampleRate*4,buf=actx.createBuffer(1,len,actx.sampleRate),d=buf.getChannelData(0);let last=0;
+ for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.2;}
+ const src=actx.createBufferSource();src.buffer=buf;src.loop=true;const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=420;
+ const master=actx.createGain();master.gain.value=.0001;master.connect(actx.destination);
+ const ng=actx.createGain();ng.gain.value=.55;src.connect(lp).connect(ng).connect(master);
+ const pads=[[110,0],[164.81,3],[220,-4]].map(([f,dt])=>{const o=actx.createOscillator();o.type='sine';o.frequency.value=f;o.detune.value=dt;const g=actx.createGain();g.gain.value=.05;o.connect(g).connect(master);o.start();return o;});
+ const lfo=actx.createOscillator(),lg=actx.createGain();lfo.frequency.value=.07;lg.gain.value=.25;lfo.connect(lg).connect(ng.gain);lfo.start();src.start();
+ MP.ambNodes={master,src,pads,lfo};mAmbLevel();}catch(e){}}
+function mAmbLevel(){if(!MP||!MP.ambNodes||!actx)return;const on=MP.amb&&!MP.pausedAt;try{const g=MP.ambNodes.master.gain,t=actx.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(Math.max(.0001,g.value),t);g.exponentialRampToValueAtTime(on?.09:.0001,t+(on?2.5:.8));}catch(e){}}
+function mAmbStop(){if(!MP||!MP.ambNodes)return;const n=MP.ambNodes;MP.ambNodes=null;try{n.master.gain.setTargetAtTime(.0001,actx.currentTime,.3);setTimeout(()=>{try{n.src.stop();n.lfo.stop();n.pads.forEach(o=>o.stop());n.master.disconnect();}catch(e){}},1500);}catch(e){}}
+function mStart(n,min){
+ const m=MED[n-1],D=min*60;ensureAudio();lockScreen();
+ MP={m,D,cues:mScript(m,D),idx:0,start:Date.now(),pausedAt:null,pausedAcc:0,voice:store.get('mvoice',true)!==false,amb:m.quiet?false:store.get('mamb',true)!==false,capUntil:0,stars:null,raf:0,timer:0,saved:false};
+ document.documentElement.style.setProperty('--mc',m.mc);$('#mPlayer').style.setProperty('--mc',m.mc);
+ $('#mTitle').textContent=m.title;$('#mQuit').hidden=true;$('#mDone').hidden=true;$('#mCap').classList.remove('show');$('#mLabel').textContent='';
+ $('#mPlayer').hidden=false;document.body.style.overflow='hidden';
+ mVoiceObj=frVoice();if(MP.voice){try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);}catch(e){}}
+ mAmbStart();mPaint();clearInterval(MP.timer);MP.timer=setInterval(mTick,250);mTick();cancelAnimationFrame(MP.raf);MP.raf=requestAnimationFrame(mDraw);
+}
+function mTick(){
+ if(!MP||MP.pausedAt)return;const e=mNow();
+ while(MP.idx<MP.cues.length&&MP.cues[MP.idx].t<=e){const c=MP.cues[MP.idx++];
+  if(c.k==='bell')mBell();
+  else if(c.k==='say'){$('#mCap').textContent=c.x;$('#mCap').classList.add('show');MP.capUntil=e+15;mSay(c.x);}
+  else if(c.k==='cue'){mSay(c.x);}
+  else if(c.k==='end'){mFinish(true);return;}}
+ if(MP.capUntil&&e>MP.capUntil){$('#mCap').classList.remove('show');MP.capUntil=0;}
+ if(MP.m.paced&&e>=PACE0){const p=(e-PACE0)%10;const up=p<5;if(MP.lastUp!==up){MP.lastUp=up;mPaceTone(up);}}
+ mPaint();
+}
+function mBreath(e){const m=MP.m;
+ if(m.paced&&e>=PACE0){const p=(e-PACE0)%10;return p<5?ease(p/5):1-ease((p-5)/5);}
+ const p=e%10;return p<4?ease(p/4):1-ease((p-4)/6);}
+const ease=x=>.5-.5*Math.cos(Math.PI*Math.min(1,Math.max(0,x)));
+function mPaint(){if(!MP)return;const e=Math.min(mNow(),MP.D);
+ $('#mTime').textContent=fmt2(MP.D-e).replace(/^0/,'');$('#mBar').style.width=(e/MP.D*100)+'%';
+ const paused=!!MP.pausedAt;$('#mIcoPause').hidden=paused;$('#mIcoPlay').hidden=!paused;$('#mPlay').setAttribute('aria-label',paused?'Reprendre':'Pause');
+ $('#mAmb').setAttribute('aria-pressed',String(MP.amb));$('#mVoice').setAttribute('aria-pressed',String(MP.voice));
+ let lab='';if(paused)lab='En pause';else if(MP.m.paced&&e>=PACE0)lab=((e-PACE0)%10)<5?'Inspire':'Expire';$('#mLabel').textContent=lab;}
+function mDraw(){
+ if(!MP||$('#mPlayer').hidden)return;const cv=$('#mCanvas'),dpr=Math.min(2,window.devicePixelRatio||1),W=cv.clientWidth,H=cv.clientHeight;
+ if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);MP.stars=null;}
+ const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);const e=mNow(),col=MP.m.mc;
+ const bg=x.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#05070B');bg.addColorStop(1,'#0C1018');x.fillStyle=bg;x.fillRect(0,0,W,H);
+ const cx=W/2,cy=H*.42,R=Math.min(W*.31,150),b=mBreath(e),amp=MP.m.paced?.3:.12,r=R*(.7+amp*b);
+ const halo=x.createRadialGradient(cx,cy,r*.2,cx,cy,r*2.6);halo.addColorStop(0,hexA(col,.30));halo.addColorStop(.5,hexA(col,.08));halo.addColorStop(1,hexA(col,0));x.fillStyle=halo;x.fillRect(0,0,W,H);
+ if(!MP.stars){MP.stars=Array.from({length:Math.round(W*H/5200)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.3,s:Math.random()*.12+.03,p:Math.random()*6.28}));}
+ MP.stars.forEach(s=>{const yy=(s.y-e*s.s*6+H*10)%H;const a=.25+.35*Math.sin(e*.6+s.p);x.fillStyle='rgba(241,243,247,'+Math.max(0,a).toFixed(3)+')';x.beginPath();x.arc(s.x,yy,s.r,0,6.283);x.fill();});
+ const core=x.createRadialGradient(cx-r*.25,cy-r*.3,r*.1,cx,cy,r);core.addColorStop(0,mixW(col,.6));core.addColorStop(.45,hexA(col,1));core.addColorStop(1,hexA(col,.35));
+ x.fillStyle=core;x.beginPath();x.arc(cx,cy,r,0,6.283);x.fill();
+ x.strokeStyle='rgba(241,243,247,.14)';x.lineWidth=1.2;x.beginPath();x.arc(cx,cy,R*1.0,0,6.283);x.stroke();
+ MP.raf=requestAnimationFrame(mDraw);}
+function mixW(h,k){const n=parseInt(h.slice(1),16),m=c=>Math.round(c+(255-c)*k);return 'rgb('+m(n>>16&255)+','+m(n>>8&255)+','+m(n&255)+')';}
+function hexA(h,a){const n=parseInt(h.slice(1),16);return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')';}
+function mPause(){if(!MP||MP.pausedAt)return;MP.pausedAt=Date.now();try{speechSynthesis.cancel();}catch(e){}mAmbLevel();mPaint();}
+function mResume(){if(!MP||!MP.pausedAt)return;MP.pausedAcc+=Date.now()-MP.pausedAt;MP.pausedAt=null;try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}mAmbLevel();mPaint();}
+function mSave(){if(!MP||MP.saved)return;const e=Math.min(mNow(),MP.D);if(e<MP.D*.8)return;MP.saved=true;
+ const h=mHist();h.push({n:MP.m.n,dur:Math.round(e),date:new Date().toISOString()});store.set('medit',h.slice(-200));}
+function mFinish(done){if(!MP)return;mSave();clearInterval(MP.timer);MP.pausedAt=MP.pausedAt||Date.now();try{speechSynthesis.cancel();}catch(e){}mAmbStop();if(done)setTimeout(mBell,200);
+ $('#mCap').classList.remove('show');$('#mDoneT').textContent=done?'Bravo':'Méditation arrêtée';
+ $('#mDoneP').textContent=MP.saved?`Niveau ${MP.m.n} · ${MP.m.title} · ${Math.round(MP.D/60)} min. ${(()=>{const nx=mNextLvl();return MED.every(m=>mHist().some(x=>x.n===m.n))?'Tu as parcouru tout le programme : choisis librement ton niveau.':'Prochaine étape conseillée : niveau '+nx.n+', '+nx.title+'.';})()}`:'Moins de 80 % du temps : elle n’est pas comptée cette fois.';
+ $('#mQuit').hidden=true;$('#mDone').hidden=false;unlockScreen();}
+function mClose(){if(!MP)return;clearInterval(MP.timer);cancelAnimationFrame(MP.raf);mAmbStop();try{speechSynthesis.cancel();}catch(e){}
+ MP=null;$('#mPlayer').hidden=true;document.body.style.overflow='';unlockScreen();renderMedit();}
+$('#mPlay').addEventListener('click',()=>{if(!MP)return;ensureAudio();MP.pausedAt?mResume():mPause();});
+$('#mAmb').addEventListener('click',()=>{if(!MP)return;ensureAudio();MP.amb=!MP.amb;if(!MP.m.quiet)store.set('mamb',MP.amb);if(MP.amb)mAmbStart();mAmbLevel();mPaint();});
+$('#mVoice').addEventListener('click',()=>{if(!MP)return;MP.voice=!MP.voice;store.set('mvoice',MP.voice);if(!MP.voice){try{speechSynthesis.cancel();}catch(e){}}mPaint();});
+$('#mClose').addEventListener('click',()=>{if(!MP)return;if(!$('#mDone').hidden){mClose();return;}MP.wasPaused=!!MP.pausedAt;mPause();$('#mQuit').hidden=false;});
+$('#mStay').addEventListener('click',()=>{$('#mQuit').hidden=true;if(MP&&!MP.wasPaused)mResume();});
+$('#mStop').addEventListener('click',()=>mFinish(false));
+$('#mBack').addEventListener('click',mClose);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&MP&&!$('#mPlayer').hidden){lockScreen();try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}}});
+
 /* ---------- Navigation ---------- */
 function show(v){
- ['home','detail','prog','guides'].forEach(k=>$('#v-'+k).hidden=k!==v);
+ ['home','detail','medit','prog','guides'].forEach(k=>$('#v-'+k).hidden=k!==v);
+ if(v==='medit')renderMedit();
  if(v==='prog')renderProg();
  const tab=v==='detail'?'home':v;
  document.querySelectorAll('.nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===tab?'page':'false'));
