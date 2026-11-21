@@ -1017,13 +1017,13 @@ $('#wGoal').addEventListener('change',()=>{const g=parseKg($('#wGoal').value);if
 function renderBackup(){const lb=store.get('lastBackup',null);$('#bkMsg').textContent=lb?'Dernière sauvegarde : '+new Date(lb).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'.':'Aucune sauvegarde pour l’instant.';}
 function bkData(){const data={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf('hdc:')===0&&k!=='hdc:run')data[k]=localStorage.getItem(k);}}catch(e){}return data;}
 $('#bkExp').addEventListener('click',async()=>{
- const now=new Date(),name='sport-sauvegarde-'+dayStr(now)+'.json';store.set('lastBackup',now.toISOString());
+ const now=new Date(),name='sport-sauvegarde-'+dayStr(now)+'.json',prevBk=store.get('lastBackup',null);store.set('lastBackup',now.toISOString());
  const json=JSON.stringify({app:'sport',v:1,date:now.toISOString(),data:bkData()});
  const ok=()=>{renderBackup();renderHome();$('#bkMsg').textContent='Sauvegarde prête : '+name+'. Garde-la dans Fichiers.';};
  const dl=()=>{try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);ok();}catch(e){$('#bkMsg').textContent='Export impossible ici. Ouvre l’appli depuis son icône ou depuis Safari.';}};
  try{const file=new File([json],name,{type:'application/json'});
   if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Sauvegarde Sport'});ok();}else dl();}
- catch(e){if(e&&e.name==='AbortError'){store.set('lastBackup',null);renderBackup();$('#bkMsg').textContent='Export annulé.';}else dl();}
+ catch(e){if(e&&e.name==='AbortError'){store.set('lastBackup',prevBk);renderBackup();$('#bkMsg').textContent='Export annulé.';}else dl();}
 });
 let bkPending=null;
 $('#bkImp').addEventListener('click',()=>{$('#bkFile').value='';$('#bkFile').click();});
@@ -1182,7 +1182,7 @@ function mAmbStop(){if(!MP||!MP.ambNodes)return;const n=MP.ambNodes;MP.ambNodes=
 function mStart(key,min){
  if(MP){clearInterval(MP.timer);cancelAnimationFrame(MP.raf);mAmbStop();try{speechSynthesis.cancel();}catch(e){}}
  const m=medOf(key),D=(m.fixed||min)*60;ensureAudio();lockScreen();
- MP={key,m,D,cues:mScript(m,D),idx:0,start:Date.now(),pausedAt:null,pausedAcc:0,started:false,before:null,voice:store.get('mvoice',true)!==false,amb:m.quiet?false:store.get('mamb',true)!==false,capUntil:0,stars:null,raf:0,timer:0,saved:false};
+ MP={key,m,D,cues:mScript(m,D),idx:0,start:Date.now(),pausedAt:null,pausedAcc:0,started:false,before:null,voice:m.timer?false:store.get('mvoice',true)!==false,amb:m.quiet?false:store.get('mamb',true)!==false,capUntil:0,stars:null,raf:0,timer:0,saved:false};
  $('#mPlayer').style.setProperty('--mc',m.mc);$('#mVoice').hidden=!!m.timer;
  $('#mTitle').textContent=m.title;$('#mQuit').hidden=true;$('#mDone').hidden=true;$('#mAfter').hidden=true;$('#mCap').classList.remove('show');$('#mLabel').textContent='';
  $('#mPlayer').hidden=false;document.body.style.overflow='hidden';
@@ -1204,12 +1204,12 @@ function mTick(){
   if(c.k==='say')fired=true;
   if(c.k==='bell')mBell();
   else if(c.k==='bell2')mBell(.4);
-  else if(c.k==='cap'){$('#mCap').textContent=c.x;$('#mCap').classList.add('show');MP.capUntil=e+12;}
-  else if(c.k==='say'){$('#mCap').textContent=c.x;$('#mCap').classList.add('show');MP.capUntil=e+15;mSay(c.x);}
+  else if(c.k==='cap'){$('#mCap').textContent=c.x;$('#mCap').classList.add('show');MP.capUntil=e+12;MP.capSay=false;}
+  else if(c.k==='say'){$('#mCap').textContent=c.x;$('#mCap').classList.add('show');MP.capUntil=e+15;MP.capSay=true;mSay(c.x);}
   else if(c.k==='cue'){mSay(c.x);}
   else if(c.k==='end'){mFinish(true);return;}}
  // … mais on redonne la dernière consigne manquée, pour se resituer
- if(missed&&!fired){$('#mCap').textContent=missed.x;$('#mCap').classList.add('show');MP.capUntil=e+15;mSay(missed.x);}
+ if(missed&&!fired){$('#mCap').textContent=missed.x;$('#mCap').classList.add('show');MP.capUntil=e+15;MP.capSay=true;mSay(missed.x);}
  if(MP.capUntil&&e>MP.capUntil){$('#mCap').classList.remove('show');MP.capUntil=0;}
  const pa=MP.m.paceAt!=null?MP.m.paceAt:PACE0;
  if(MP.m.paced&&e>=pa){const p=(e-pa)%10;const up=p<5;if(MP.lastUp!==up){MP.lastUp=up;mPaceTone(up);}}
@@ -1250,7 +1250,7 @@ function hexA(h,a){const n=parseInt(h.slice(1),16);return 'rgba('+(n>>16&255)+',
 function mPause(){if(!MP||MP.pausedAt)return;MP.pausedAt=Date.now();try{speechSynthesis.cancel();}catch(e){}mAmbLevel();mPaint();}
 function mResume(){if(!MP||!MP.pausedAt)return;MP.pausedAcc+=Date.now()-MP.pausedAt;MP.pausedAt=null;try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}mAmbLevel();
  // la phrase coupée par la pause est redite à la reprise
- if(MP.capUntil&&mNow()<MP.capUntil){MP.capUntil=mNow()+15;mSay($('#mCap').textContent);}
+ if(MP.capSay&&MP.capUntil&&mNow()<MP.capUntil){MP.capUntil=mNow()+15;mSay($('#mCap').textContent);}
  mPaint();}
 function mSave(){if(!MP||MP.saved)return;const e=Math.min(mNow(),MP.D);if(e<MP.D*.8)return;MP.saved=true;
  const h=mHist(),ent={n:MP.key,dur:Math.round(e),date:new Date().toISOString()};if(MP.before!=null)ent.before=MP.before;h.push(ent);MP.savedDate=ent.date;store.set('medit',h.slice(-200));}
@@ -1264,7 +1264,7 @@ function mClose(){if(!MP)return;clearInterval(MP.timer);cancelAnimationFrame(MP.
  MP=null;$('#mPlayer').hidden=true;document.body.style.overflow='';unlockScreen();renderMedit();}
 let mLastTap=0;
 $('#mPlay').addEventListener('click',()=>{if(!MP||!MP.started)return;const t=Date.now();if(t-mLastTap<450)return;mLastTap=t;ensureAudio();MP.pausedAt?mResume():mPause();});
-$('#mAmb').addEventListener('click',()=>{if(!MP)return;ensureAudio();MP.amb=!MP.amb;if(!MP.m.quiet)store.set('mamb',MP.amb);if(MP.amb)mAmbStart();mAmbLevel();mPaint();});
+$('#mAmb').addEventListener('click',()=>{if(!MP)return;ensureAudio();MP.amb=!MP.amb;if(!MP.m.quiet)store.set('mamb',MP.amb);if(MP.amb&&MP.started)mAmbStart();mAmbLevel();mPaint();});
 $('#mVoice').addEventListener('click',()=>{if(!MP)return;MP.voice=!MP.voice;store.set('mvoice',MP.voice);if(!MP.voice){try{speechSynthesis.cancel();}catch(e){}}mPaint();});
 $('#mClose').addEventListener('click',()=>{if(!MP)return;if(!$('#mDone').hidden||!MP.started){$('#mMood').hidden=true;mClose();return;}MP.wasPaused=!!MP.pausedAt;mPause();$('#mQuit').hidden=false;});
 $('#mStay').addEventListener('click',()=>{$('#mQuit').hidden=true;if(MP&&!MP.wasPaused)mResume();});
