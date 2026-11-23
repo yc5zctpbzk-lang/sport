@@ -302,6 +302,29 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 .gtime{font-family:var(--display);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:center;line-height:1}
 .gtime small{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.12em;color:rgba(241,243,247,.55);text-transform:uppercase;margin-top:3px}
 @media (prefers-reduced-motion:reduce){.gbig.pulse{animation:none}}
+/* écrans peu hauts (iPhone SE, paysage) : tout tient sans défiler */
+.gpanel,.pover,.mlay{overflow-y:auto}
+.ring{width:min(72vw,280px,36vh)}
+@media (max-height:740px){
+ .gstage{flex-basis:34%;min-height:150px}
+ .gname{font-size:24px} .gbig{font-size:min(26vw,104px)} .gtip{min-height:0;font-size:14px} .gctrl{margin-top:4px;gap:16px}
+ .gsegs{margin-top:6px}
+ .pname{font-size:28px} .pmain{gap:4px} .pin{gap:10px}
+ .ptime b{font-size:52px} .pover{gap:10px}
+}
+@media (max-height:500px){
+ .gplayer{flex-direction:row}
+ .gstage{flex:0 0 46%;height:100%;min-height:0}
+ .gpanel{justify-content:center;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+ .gbig{font-size:min(20vh,84px)} .gname{font-size:22px} .gctrl{grid-template-columns:48px 64px 48px} .gplay{width:64px;height:64px} .gctrl .side{height:48px}
+ .player{padding-top:calc(6px + env(safe-area-inset-top,0px))}
+ .pin{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto 1fr;column-gap:20px;row-gap:6px}
+ .pin .ptop,.pin .bar{grid-column:1/-1}
+ .pmain{grid-column:1;grid-row:3} #pFoot{grid-column:2;grid-row:3;justify-content:center} .pdone{grid-column:1/-1;grid-row:3}
+ .ring{width:min(46vh,200px)} .pname{font-size:22px} .big{font-size:min(14vh,64px)}
+ .pover{justify-content:flex-start;padding-top:16px} .pover .pname{font-size:22px} .ptime{margin:0} .ptime b{font-size:36px}
+ .mlay{justify-content:flex-start;padding-top:16px}
+}
 .mplayer{position:fixed;inset:0;z-index:45;background:#05070B;color:#F1F3F7;overflow:hidden;-webkit-user-select:none;user-select:none}
 .mplayer canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mtop{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -1462,6 +1485,7 @@ function renderCore(){
  $('#gList').innerHTML=L.ex.map(id=>{const e=GEX[id];return `<button class="gex" data-gx="${id}"><canvas class="gth" data-pose="${e.pose}" aria-hidden="true"></canvas><span style="min-width:0"><strong>${e.name}</strong><small>${e.side?'Côté gauche, puis côté droit · ':''}${L.work} s</small></span></button>`;}).join('');
  requestAnimationFrame(()=>document.querySelectorAll('#gList canvas').forEach(c=>thumb(c,c.dataset.pose,1.5)));
 }
+let gRsz=0;window.addEventListener('resize',()=>{clearTimeout(gRsz);gRsz=setTimeout(()=>{if(!$('#v-core').hidden)document.querySelectorAll('#gList canvas').forEach(c=>thumb(c,c.dataset.pose,1.5));},200);});
 $('#gLevels').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;glvl=+b.dataset.g;store.set('glvl',glvl);renderCore();});
 $('#gBack').addEventListener('click',()=>show('home'));
 $('#gStart').addEventListener('click',()=>gStart(glvl));
