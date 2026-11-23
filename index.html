@@ -605,6 +605,7 @@ details.g[open] summary .plus{transform:rotate(45deg)}
       <div class="pname" id="dnTitle">Séance terminée</div>
       <p class="psub" id="dnText"></p>
       <button class="ghost" id="dnWatch">Ajouter les données de ma montre</button>
+      <button class="cta" id="dnCore" hidden style="max-width:320px;background:#B39DFF;color:#0B0E13"></button>
       <button class="cta" id="dnBack" style="max-width:320px">Retour aux séances</button>
     </div>
 
@@ -1436,8 +1437,8 @@ const GLV=[
  {n:8,title:'Défi',work:45,rest:15,rounds:3,ex:['gv','gl','ph','db','sm','hb']}
 ];
 let glvl=Math.min(8,Math.max(1,+store.get('glvl',1)||1));
-function gBuild(L){
- const st=[{t:'warm',d:45,name:'Échauffement',sub:'Marche sur place, rotations du bassin et des épaules.',pose:GEX[L.ex[0]].pose}];
+function gBuild(L,o){
+ const st=o&&o.noWarm?[]:[{t:'warm',d:45,name:'Échauffement',sub:'Marche sur place, rotations du bassin et des épaules.',pose:GEX[L.ex[0]].pose}];
  const holds=[];L.ex.forEach(id=>(GEX[id].side?['gauche','droit']:[null]).forEach(sd=>holds.push({id,sd})));
  for(let r=1;r<=L.rounds;r++)holds.forEach((h,i)=>{
   st.push({t:'work',ex:h.id,side:h.sd,d:L.work,round:r,pos:i+1,of:holds.length});
@@ -1447,7 +1448,7 @@ function gBuild(L){
  st.push({t:'cool',d:40,name:'Étirement',sub:'Allongé, bras au-dessus de la tête : étire-toi de tout ton long et respire.',pose:'hollow'});
  return st;
 }
-const gDur=L=>gBuild(L).reduce((a,s)=>a+s.d,0);
+const gDur=(L,o)=>gBuild(L,o).reduce((a,s)=>a+s.d,0);
 const gDone=()=>store.get('hist',[]).filter(x=>x.sid==='G');
 function gRec(){const h=gDone();for(const L of GLV)if(h.filter(x=>x.lvl===L.n).length<2)return L.n;return 8;}
 function thumb(cv,pose,t){const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth||cv.width,h=cv.clientHeight||cv.height;cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);drawScene(x,w,h,pose,t||1);}
@@ -1487,14 +1488,14 @@ function openGTuto(id){
 let GP=null,gLastTap=0;
 const gNow=()=>GP?((GP.pausedAt||Date.now())-GP.stepStart-GP.stepPaused)/1000:0;
 const gTotal=()=>GP?((GP.pausedAt||Date.now())-GP.start-GP.pausedAcc)/1000:0;
-function gStart(n){
- const L=GLV[n-1];ensureAudio();lockScreen();
+function gStart(n,o){
+ const L=GLV[n-1];o=o||{};ensureAudio();lockScreen();
  if(GP){clearInterval(GP.timer);cancelAnimationFrame(GP.raf);}
- GP={L,steps:gBuild(L),i:0,start:Date.now(),pausedAt:null,pausedAcc:0,stepStart:Date.now(),stepPaused:0,said:{},raf:0,timer:0};
+ GP={L,o,steps:gBuild(L,o),i:0,start:Date.now(),pausedAt:null,pausedAcc:0,stepStart:Date.now(),stepPaused:0,said:{},raf:0,timer:0};
  $('#gTitle').textContent='Gainage · niveau '+n;$('#gDone').hidden=true;$('#gQuit').hidden=true;
  $('#gSegs').innerHTML=GP.steps.map((s,i)=>s.t==='work'?`<i data-i="${i}"></i>`:'').join('');
  $('#gPlayer').hidden=false;document.body.style.overflow='hidden';gPaintVoice();
- say('Gainage, niveau '+n+'. Échauffement.');gEnter(0);
+ say('Gainage, niveau '+n+(o.noWarm?'. Tu es déjà échauffé, on y va.':'. Échauffement.'));gEnter(0);
  GP.timer=setInterval(gTick,200);GP.raf=requestAnimationFrame(gDraw);
 }
 function gEnter(i){
@@ -1535,14 +1536,14 @@ function gDraw(){
  if(!GP||$('#gPlayer').hidden)return;const cv=$('#gCanvas'),dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;
  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}
  const s=GP.steps[GP.i],pose=s.ex?GEX[s.ex].pose:s.pose,x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);
- drawScene(x,w,h,pose,GP.pausedAt?1:gNow()+1,{dim:s.t!=='work',accent:s.t==='rest'?'#4FC3F7':'#FF6A3D'});
+ drawScene(x,w,h,pose,gNow()+1,{dim:s.t!=='work',accent:s.t==='rest'?'#4FC3F7':'#FF6A3D'});
  GP.raf=requestAnimationFrame(gDraw);
 }
 function gPause(){if(!GP||GP.pausedAt)return;GP.pausedAt=Date.now();hush();gPaint();}
 function gResume(){if(!GP||!GP.pausedAt)return;const d=Date.now()-GP.pausedAt;GP.pausedAcc+=d;GP.stepPaused+=d;GP.pausedAt=null;gPaint();}
 function gFinish(done){
- if(!GP)return;clearInterval(GP.timer);const dur=Math.round(gTotal()),full=gDur(GP.L);GP.pausedAt=GP.pausedAt||Date.now();hush();
- const ok=dur>=full*.8;if(ok){const h=store.get('hist',[]);h.push({sid:'G',lvl:GP.L.n,date:new Date().toISOString(),dur,week,cycle});store.set('hist',h.slice(-120));}
+ if(!GP)return;clearInterval(GP.timer);const dur=Math.round(gTotal());GP.pausedAt=GP.pausedAt||Date.now();hush();
+ const ok=dur>=gDur(GP.L,GP.o)*.8;if(ok){const h=store.get('hist',[]);h.push({sid:'G',lvl:GP.L.n,date:new Date().toISOString(),dur,week,cycle});store.set('hist',h.slice(-120));}
  if(done)endBeep();say(ok?'Bravo, gainage terminé.':'Séance arrêtée.',400);
  $('#gDoneT').textContent=ok?'Bravo':'Séance arrêtée';
  $('#gDoneP').textContent=ok?`Niveau ${GP.L.n} · ${GP.L.title} · ${durTxt(dur)}. ${gRec()>GP.L.n?'Le niveau '+gRec()+' est débloqué : c’est ton prochain conseillé.':'Refais ce niveau encore une fois avant de passer au suivant.'}`:'Moins de 80 % de la séance : elle n’est pas comptée cette fois.';
@@ -1736,6 +1737,7 @@ function finish(){
  $('#player').dataset.mode='effort';$('#pBar').style.width='100%';
  $('#pMain').hidden=true;$('#pFoot').hidden=true;$('#pOver').hidden=true;$('#pDone').hidden=false;
  $('#dnTitle').textContent=SESS[P.sid].eye+' terminée';
+ {const ab=P.sid==='A'||P.sid==='B',gl=gRec(),L=GLV[gl-1];$('#dnCore').hidden=!ab;if(ab)$('#dnCore').textContent='Enchaîner le gainage · niveau '+gl+' · '+Math.round(gDur(L,{noWarm:true})/60)+' min';$('#dnBack').className=ab?'ghost wide':'cta';$('#dnBack').style.maxWidth='320px';}
  $('#dnText').textContent='En '+durTxt(dur)+'. Bois un verre d’eau. Prochaine séance après un jour de repos si possible.';
  endBeep();unlockScreen();
 }
@@ -1755,6 +1757,7 @@ $('#pClose').addEventListener('click',()=>{if(!P)return;if(!$('#pDone').hidden){
 $('#qStay').addEventListener('click',()=>{$('#pQuit').hidden=true;if(P&&P.quitPaused)startCd();});
 $('#qLeave').addEventListener('click',()=>{stopPlayer();});
 $('#dnBack').addEventListener('click',()=>{stopPlayer();show('home');window.scrollTo(0,0);});
+$('#dnCore').addEventListener('click',()=>{const n=gRec();stopPlayer();show('home');gStart(n,{noWarm:true});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden)closeTuto();});
 
 renderHome();
