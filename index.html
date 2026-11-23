@@ -268,6 +268,40 @@ details.g[open] summary .plus{transform:rotate(45deg)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 .spark{display:inline-block;vertical-align:middle;margin-right:8px}
+.scard.g .letter{background:rgba(179,157,255,.16);color:#B39DFF;font-size:30px}
+.gex{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;align-items:center;width:100%;padding:10px;border-radius:18px;background:var(--surface);border:1px solid var(--line);text-align:left}
+.gex strong{display:block;font-size:15.5px}
+.gex small{color:var(--muted);font-size:12.5px}
+.gth{width:120px;height:80px;border-radius:12px;display:block}
+.glist{display:flex;flex-direction:column;gap:10px}
+.gprev{width:100%;height:220px;border-radius:16px;display:block}
+.gplayer{position:fixed;inset:0;z-index:44;background:#0A0D13;color:#F1F3F7;display:flex;flex-direction:column;overflow:hidden;-webkit-user-select:none;user-select:none}
+.gplayer[data-mode="effort"]{--gc:var(--effort)} .gplayer[data-mode="rest"]{--gc:var(--rest)} .gplayer[data-mode="calm"]{--gc:var(--warn)}
+.gstage{position:relative;flex:0 0 44%;min-height:220px}
+.gstage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.gtop{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:2;
+  padding:calc(10px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.gtop .icon{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
+.gtop .icon[aria-pressed="false"]{opacity:.5}
+.gpanel{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;
+  padding:14px max(20px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.gpanel .chip{background:color-mix(in srgb,var(--gc) 16%,transparent);color:var(--gc)}
+.gname{font-family:var(--display);font-weight:800;font-size:30px;line-height:1;text-transform:uppercase;text-wrap:balance}
+.gside{display:inline-block;padding:4px 12px;border-radius:999px;background:#F1F3F7;color:#0A0D13;font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+.gbig{font-family:var(--display);font-weight:800;font-size:min(30vw,150px);line-height:.88;color:var(--gc);font-variant-numeric:tabular-nums;margin-top:2px}
+.gbig.pulse{animation:gpulse 1s ease-in-out infinite}
+@keyframes gpulse{0%{transform:scale(1)}30%{transform:scale(1.12)}100%{transform:scale(1)}}
+.gunit{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:rgba(241,243,247,.6)}
+.gtip{font-size:15px;color:rgba(241,243,247,.85);max-width:34ch;min-height:44px;margin:0}
+.gsegs{display:flex;gap:3px;width:100%;max-width:520px;margin-top:auto}
+.gsegs i{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.12)}
+.gsegs i.on{background:var(--effort);opacity:.55} .gsegs i.now{background:var(--gc)}
+.gctrl{display:grid;grid-template-columns:56px 84px 56px;gap:22px;align-items:center;justify-content:center;margin-top:10px}
+.gctrl .side{height:56px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center}
+.gplay{width:84px;height:84px;border-radius:50%;background:var(--gc);color:#0A0D13;display:grid;place-items:center}
+.gtime{font-family:var(--display);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:center;line-height:1}
+.gtime small{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.12em;color:rgba(241,243,247,.55);text-transform:uppercase;margin-top:3px}
+@media (prefers-reduced-motion:reduce){.gbig.pulse{animation:none}}
 .mplayer{position:fixed;inset:0;z-index:45;background:#05070B;color:#F1F3F7;overflow:hidden;-webkit-user-select:none;user-select:none}
 .mplayer canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mtop{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -350,6 +384,18 @@ details.g[open] summary .plus{transform:rotate(45deg)}
   <p class="hint">Touche un exercice pour voir le tuto. Le chrono enchaîne échauffement, séries, repos et étirements.</p>
   <button class="cta" id="startBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Démarrer</button>
   <button class="ghost wide" id="doneBtn">J’ai fait cette séance</button>
+</section>
+
+<!-- GAINAGE -->
+<section class="view" id="v-core" hidden aria-label="Gainage">
+  <button class="back" id="gBack"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Séances</button>
+  <div class="dhead"><p class="eyebrow">Sans appui sur les genoux</p><h1>Gainage</h1><p>6 positions animées, 8 niveaux. Chaque niveau se fait deux fois avant de passer au suivant.</p></div>
+  <div class="weeks" id="gLevels" role="group" aria-label="Choisir le niveau"></div>
+  <div class="phase" id="gHead"></div>
+  <div class="dstats" id="gStats"></div>
+  <div class="glist" id="gList"></div>
+  <p class="hint">Touche une position pour la voir en mouvement. Les positions au sol se font sur le lit ou un tapis épais : installe-toi assis puis allonge-toi, sans passer à genoux.</p>
+  <button class="cta" id="gStart"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Démarrer</button>
 </section>
 
 <!-- MÉDITATION -->
@@ -574,6 +620,33 @@ details.g[open] summary .plus{transform:rotate(45deg)}
   </div>
 </div>
 
+<!-- LECTEUR GAINAGE -->
+<div class="gplayer" id="gPlayer" hidden data-mode="calm" role="dialog" aria-label="Séance de gainage">
+  <div class="gstage"><canvas id="gCanvas" role="img" aria-label="Démonstration animée de la position"></canvas>
+    <div class="gtop">
+      <button class="icon" id="gClose" aria-label="Arrêter la séance"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="gtime"><span id="gElapsed">00:00</span><small id="gTitle">Gainage</small></div>
+      <button class="icon" id="gVoice" aria-label="Couper le son" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+    </div>
+  </div>
+  <div class="gpanel">
+    <span class="chip" id="gChip">Échauffement</span>
+    <div class="gname" id="gName"></div>
+    <span class="gside" id="gSide" hidden></span>
+    <div class="gbig" id="gBig" aria-live="off">45</div>
+    <div class="gunit" id="gUnit">secondes</div>
+    <p class="gtip" id="gTip"></p>
+    <div class="gsegs" id="gSegs" aria-hidden="true"></div>
+    <div class="gctrl">
+      <button class="side" id="gPrev" aria-label="Étape précédente"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h2v12H6zM20 6v12L9.5 12z"/></svg></button>
+      <button class="gplay" id="gPlay" aria-label="Pause"><svg id="gIcoPause" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><svg id="gIcoPlay" hidden width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="side" id="gSkip" aria-label="Passer l’étape"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 6h2v12h-2zM4 6v12l10.5-6z"/></svg></button>
+    </div>
+  </div>
+  <div class="mlay" id="gQuit" hidden><h2>Arrêter ?</h2><p>La séance est en pause. Elle compte comme faite si tu as dépassé 80 % du temps.</p><button class="cta" id="gStay" style="max-width:320px">Continuer</button><button class="ghost" id="gStop">Arrêter</button></div>
+  <div class="mlay" id="gDone" hidden><h2 id="gDoneT">Bravo</h2><p id="gDoneP"></p><button class="cta" id="gBack2" style="max-width:320px">Retour</button></div>
+</div>
+
 <!-- LECTEUR MÉDITATION -->
 <div class="mplayer" id="mPlayer" hidden role="dialog" aria-label="Méditation en cours">
   <canvas id="mCanvas" aria-hidden="true"></canvas>
@@ -702,6 +775,7 @@ const EX={
 const SESS={
  A:{id:'A',cls:'a',eye:'Séance A',title:'Poussée',focus:'Pectoraux · Épaules · Triceps · Gainage',list:[{id:'pompes'},{id:'dev'},{id:'lat'},{id:'tri'},{id:'rotext',from:4},{id:'halo',from:6},{id:'planche'}]},
  B:{id:'B',cls:'b',eye:'Séance B',title:'Tirage',focus:'Dos · Arrière d’épaules · Biceps · Gainage',list:[{id:'row1'},{id:'trx'},{id:'oiseau'},{id:'curl'},{id:'trxy',from:4},{id:'shrug',from:6},{id:'gainlat'}]},
+ G:{id:'G',cls:'g',eye:'Gainage',title:'Gainage',focus:'Abdos · Dos · Gainage'},
  X:{id:'X',cls:'x',eye:'Express',title:'Circuit',focus:'Tout le haut du corps, quand tu manques de temps',circuit:['pompes','trx','dev','planche'],work:40,trans:20},
  J:{id:'J',cls:'j',eye:'Bloc jambes',title:'Jambes',focus:'Fessiers · Cuisses · Mollets · validé par ton kiné',list:[{id:'pont'},{id:'clam'},{id:'slr'},{id:'mollets'}],
   warm:[{name:'Marche sur place',tip:'Doucement, sans forcer sur le genou.',d:60}],cool:[{name:'Respiration lente',tip:'Inspire 4 s, expire 6 s.',d:30}]}
@@ -786,8 +860,9 @@ function renderHome(){
  $('#phText').textContent=c.phase.text;
  $('#rirRule').textContent='RIR '+c.rir;
  $('#weeks').innerHTML=Array.from({length:8},(_,i)=>`<button class="wk" aria-pressed="${i+1===week}" data-w="${i+1}" aria-label="Semaine ${i+1}">${i+1}</button>`).join('');
- const hist=store.get('hist',[]).filter(x=>x.sid!=='X');const todo=hist.length?(hist[hist.length-1].sid==='A'?'B':'A'):'A';
- $('#cards').innerHTML=['A','B','X','J'].map(id=>{
+ const hist=store.get('hist',[]).filter(x=>x.sid==='A'||x.sid==='B');const todo=hist.length?(hist[hist.length-1].sid==='A'?'B':'A'):'A';
+ $('#cards').innerHTML=['A','B','X','G','J'].map(id=>{
+  if(id==='G'){const L=GLV[gRec()-1];return `<button class="scard g" data-s="G"><span class="letter">GA</span><span style="min-width:0"><span class="eyebrow">Gainage animé</span><h3>Gainage</h3><p>Positions en vidéo, décompte et voix</p><span class="meta"><span><b class="num">${Math.round(gDur(L)/60)} min</b></span><span>niveau ${L.n} conseillé</span><span>${L.ex.length} exercices</span></span></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`;}
   const S=SESS[id];const n=S.circuit?S.circuit.length:plan(id).length;
   if(id==='J'&&!legs)return `<button class="scard lock" data-s="J"><span class="letter"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span style="min-width:0"><span class="eyebrow">Bloc jambes</span><h3>Verrouillé</h3><p>À activer quand ton kiné a validé les exercices</p></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`;
   const series=S.circuit?rounds()+' tours':seriesTxt(id);
@@ -820,7 +895,7 @@ const goCard=id=>{show('prog');setTimeout(()=>{try{$(id).scrollIntoView({block:'
 $('#bkHint').addEventListener('click',()=>goCard('#bkCard'));$('#wHint').addEventListener('click',()=>goCard('#wCard'));
 $('#resumeBar').addEventListener('click',()=>{const r=getRun();if(!r)return;if(r.week!==week||(r.cycle||1)!==cycle){week=r.week;cycle=r.cycle||1;store.set('week',week);store.set('cycle',cycle);renderHome();}startSession(r.sid,r);});
 $('#weeks').addEventListener('click',e=>{const b=e.target.closest('[data-w]');if(!b)return;week=+b.dataset.w;store.set('week',week);renderHome();});
-$('#cards').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b)openDetail(b.dataset.s);});
+$('#cards').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b&&b.dataset.s==='G'){openCore();return;}if(b)openDetail(b.dataset.s);});
 
 /* ---------- Détail ---------- */
 let curS='A';
@@ -871,7 +946,7 @@ function openLog(sid,idx){
  lastFocus=document.activeElement;
  const h=store.get('hist',[]),ed=idx!=null&&h[idx]?h[idx]:null,sel=ed?ed.sid:sid;
  const d=ed?new Date(ed.date):new Date();
- const opts=['A','B','X','J'].filter(k=>k!=='J'||legs||sel==='J').map(k=>`<option value="${k}"${k===sel?' selected':''}>${SESS[k].eye} · ${SESS[k].title}</option>`).join('');
+ const opts=['A','B','X','G','J'].filter(k=>k!=='J'||legs||sel==='J').map(k=>`<option value="${k}"${k===sel?' selected':''}>${SESS[k].eye} · ${SESS[k].title}</option>`).join('');
  $('#sheetIn').innerHTML=`<div class="grab"></div>
  <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><div style="min-width:0;display:flex;flex-direction:column;gap:8px"><span class="eyebrow">${ed?'Modifier la séance':'Noter une séance faite'}</span><h2 id="tTitle">Données de ta séance</h2></div><button class="icon" id="tClose" aria-label="Fermer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
  <form class="form" id="fLog" novalidate>
@@ -1279,12 +1354,218 @@ $('#mAfterBtns').addEventListener('click',e=>{const b=e.target.closest('[data-v]
  $('#mDoneP').textContent+=MP.before!=null?` Stress : ${MP.before} → ${v}.`:` Stress noté : ${v}.`;});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&MP&&!$('#mPlayer').hidden){lockScreen();try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}}});
 
+/* ---------- Gainage : mannequin animé ---------- */
+const V=(x,y)=>({x,y}),vadd=(a,b)=>V(a.x+b.x,a.y+b.y),vlerp=(a,b,k)=>V(a.x+(b.x-a.x)*k,a.y+(b.y-a.y)*k);
+const pol=(p,len,deg)=>V(p.x+len*Math.cos(deg*Math.PI/180),p.y+len*Math.sin(deg*Math.PI/180));
+const smooth=x=>.5-.5*Math.cos(Math.PI*Math.min(1,Math.max(0,x)));
+// Les poses : coordonnées en « centimètres », sol à y = 0, la tête vers la droite.
+const POSES={
+ incl(t){const b=Math.sin(t*Math.PI/2)*.8,S=V(130,105+b*.4),A=V(32,8),H=vlerp(S,A,52/138),K=vlerp(H,A,44/86);
+  return {prop:'table',S,H,K,A,toe:V(A.x-9,1),E:V(130,77),W:V(157,79),E2:V(135,77),W2:V(162,79),head:pol(S,21,Math.atan2(S.y-H.y,S.x-H.x)*180/Math.PI)};},
+ side(t){const b=Math.sin(t*Math.PI/2)*.8,S=V(130,105+b*.4),A=V(32,8),H=vlerp(S,A,52/138),K=vlerp(H,A,44/86);
+  return {prop:'table',front:true,S,H,K,A,toe:V(A.x-9,1),E:V(130,77),W:V(156,79),E2:V(S.x-14,S.y-16),W2:vadd(H,V(6,7)),head:pol(S,21,Math.atan2(S.y-H.y,S.x-H.x)*180/Math.PI)};},
+ high(t){const b=Math.sin(t*Math.PI/2)*.6,W=V(150,79),S=V(146,131+b*.4),A=V(84,8),H=vlerp(S,A,52/138),K=vlerp(H,A,44/86);
+  return {prop:'table',S,H,K,A,toe:V(A.x-9,1),E:vlerp(S,W,.52),W,E2:vadd(vlerp(S,W,.52),V(4,0)),W2:V(155,79),head:pol(S,21,Math.atan2(S.y-H.y,S.x-H.x)*180/Math.PI)};},
+ deadbug(t){const cyc=6,ph=(t%cyc)/cyc,s=Math.floor(t/cyc)%2,k=smooth(ph<.5?ph*2:2-ph*2);
+  const H=V(80,24),S=V(132,25),arm=a=>{const e=pol(S,30,a);return [e,pol(e,27,a)];};
+  const leg=(th,sh)=>{const kk=pol(H,44,th);return [kk,pol(kk,42,sh)];};
+  const aMove=90-75*k,thMove=90+82*k,shMove=180-8*k;
+  const nA=arm(s===0?aMove:90),fA=arm(s===1?aMove:90),nL=leg(s===1?thMove:90,s===1?shMove:180),fL=leg(s===0?thMove:90,s===0?shMove:180);
+  return {prop:'mat',S,H,K:nL[0],A:nL[1],toe:pol(nL[1],10,s===1?shMove+90:95),K2:fL[0],A2:fL[1],toe2:pol(fL[1],10,s===0?shMove+90:95),E:nA[0],W:nA[1],E2:fA[0],W2:fA[1],head:V(152,28)};},
+ superman(t){const L=.82+.18*Math.sin(t*Math.PI/2),H=V(92,20),a=14*L,S=pol(H,52,a);
+  const K=V(48,20+3*L),A=V(6,23+7*L),E=pol(S,30,a+14),W=pol(E,27,a+16);
+  return {prop:'mat',S,H,K,A,toe:V(-6,24+7*L),E,W,E2:pol(S,30,a+10),W2:pol(pol(S,30,a+10),27,a+12),head:pol(S,19,a+8)};},
+ hollow(t){const b=Math.sin(t*Math.PI/2),H=V(92,22),S=pol(H,52,13+1.2*b),K=pol(H,44,118+b),A=pol(K,42,184);
+  const E=pol(S,30,188),W=pol(E,27,192);
+  return {prop:'mat',S,H,K,A,toe:pol(A,10,100),E,W,E2:pol(S,30,184),W2:pol(pol(S,30,184),27,188),head:pol(S,20,24)};}
+};
+function shade(hex,k){const n=parseInt(hex.slice(1),16),r=n>>16&255,g=n>>8&255,b=n&255,f=c=>Math.round(k>0?c+(255-c)*k:c*(1+k));return `rgb(${f(r)},${f(g)},${f(b)})`;}
+function drawScene(cx,W,H,pose,t,o){
+ o=o||{};const acc=o.accent||'#FF6A3D',P=POSES[pose](t),dim=1;
+ const s=Math.min(W/240,H*.8/172),ox=W/2-84*s,oy=H*.88,X=p=>ox+p.x*s,Y=p=>oy-p.y*s,pt=p=>[X(p),Y(p)];
+ // studio
+ const bg=cx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#0E131C');bg.addColorStop(.88,'#151B26');bg.addColorStop(.88,'#10151E');bg.addColorStop(1,'#0A0D13');cx.fillStyle=bg;cx.fillRect(0,0,W,H);
+ const sp=cx.createRadialGradient(W*.55,H*.2,10,W*.55,H*.35,W*.75);sp.addColorStop(0,hexA(acc,.20));sp.addColorStop(1,hexA(acc,0));cx.fillStyle=sp;cx.fillRect(0,0,W,H);
+ cx.save();cx.globalAlpha=dim;
+ // ombre au sol
+ const sh=cx.createRadialGradient(X(V(95,0)),Y(V(0,0)),2,X(V(95,0)),Y(V(0,0)),95*s);sh.addColorStop(0,'rgba(0,0,0,.55)');sh.addColorStop(1,'rgba(0,0,0,0)');
+ cx.save();cx.translate(X(V(95,0)),Y(V(0,0)));cx.scale(1,.16);cx.translate(-X(V(95,0)),-Y(V(0,0)));cx.fillStyle=sh;cx.beginPath();cx.arc(X(V(95,0)),Y(V(0,0)),95*s,0,6.283);cx.fill();cx.restore();
+ const cap=(a,b,w,col)=>{const [ax,ay]=pt(a),[bx,by]=pt(b),dx=bx-ax,dy=by-ay,l=Math.hypot(dx,dy)||1,nx=-dy/l,ny=dx/l,mx=(ax+bx)/2,my=(ay+by)/2,hw=w*s/2;
+  const g=cx.createLinearGradient(mx+nx*hw,my+ny*hw,mx-nx*hw,my-ny*hw);g.addColorStop(0,shade(col,.35));g.addColorStop(.45,col);g.addColorStop(1,shade(col,-.45));
+  cx.strokeStyle=g;cx.lineWidth=w*s;cx.lineCap='round';cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();};
+ const ball=(c,r,col)=>{const [x,y]=pt(c),g=cx.createRadialGradient(x-r*s*.35,y-r*s*.4,r*s*.1,x,y,r*s);g.addColorStop(0,shade(col,.45));g.addColorStop(.6,col);g.addColorStop(1,shade(col,-.4));cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r*s,0,6.283);cx.fill();};
+ // accessoires
+ if(P.prop==='mat'){const g=cx.createLinearGradient(0,Y(V(0,12)),0,Y(V(0,0)));g.addColorStop(0,'#3A4458');g.addColorStop(1,'#262D3B');cx.fillStyle=g;rrect(cx,X(V(-24,0)),Y(V(0,11)),222*s,11*s,4*s);cx.fill();cx.fillStyle=hexA(acc,.5);cx.fillRect(X(V(-24,0)),Y(V(0,11)),222*s,1.2*s);}
+ const tableTop=()=>{const g=cx.createLinearGradient(0,Y(V(0,79)),0,Y(V(0,71)));g.addColorStop(0,'#B98B5E');g.addColorStop(1,'#7A5634');cx.fillStyle=g;rrect(cx,X(V(112,0)),Y(V(0,79)),92*s,6*s,2*s);cx.fill();};
+ if(P.prop==='table'){cx.fillStyle='#5E432A';[[118,0],[194,0]].forEach(([x])=>{cx.fillRect(X(V(x,0)),Y(V(0,73)),4*s,73*s);});tableTop();}
+ const SK='#C3CAD6',SK2=shade(SK,-.28),SHO='#F1F3F7',SHORT='#2B3446',TOP=acc;
+ // membres du fond (plus sombres)
+ const farLeg=()=>{const K2=P.K2||vadd(P.K,V(-3,1)),A2=P.A2||vadd(P.A,V(-3,0)),T2=P.toe2||vadd(P.toe,V(-3,0));cap(P.H,K2,13,shade(SHORT,-.2));cap(K2,A2,10,SK2);cap(A2,T2,6,shade(SHO,-.35));};
+ const farArm=()=>{cap(vadd(P.S,V(-1,1)),P.E2,9,shade(TOP,-.3));cap(P.E2,P.W2,8,SK2);ball(P.W2,4.6,SK2);};
+ farLeg();if(!P.front)farArm();
+ // tronc + tête
+ const neck=vlerp(P.S,P.head,.45);cap(P.S,neck,7,SK);
+ cap(P.H,vlerp(P.H,P.S,.35),P.front?25:22,SHORT);cap(vlerp(P.H,P.S,.3),P.S,P.front?28:25,TOP);
+ ball(P.head,11,SK);
+ if(P.front)farArm();
+ // membres de devant
+ cap(P.H,P.K,13,SHORT);cap(P.K,P.A,10,SK);cap(P.A,P.toe,6,SHO);
+ cap(P.S,P.E,9,TOP);cap(P.E,P.W,8,SK);ball(P.W,4.8,SK);
+ cx.restore();
+ if(o.dim){cx.fillStyle='rgba(10,13,19,.5)';cx.fillRect(0,0,W,H);}
+}
+function rrect(cx,x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath();}
+
+/* ---------- Gainage : programme ---------- */
+const GEX={
+ gv:{name:'Gainage ventral incliné',short:'Ventral',pose:'incl',setup:'Avant-bras posés sur une table stable, coudes sous les épaules. Recule les pieds, parallèles, corps droit de la tête aux talons.',cues:['Serre les fessiers et rentre légèrement le ventre.','Respire calmement, sans bloquer.'],knee:'Pieds à plat, jambes droites sans verrouiller les genoux.',easier:'Mains sur le plan de travail, plus haut.',harder:'Pieds plus reculés.'},
+ gl:{name:'Gainage latéral incliné',short:'Latéral',pose:'side',side:true,setup:'De côté, avant-bras sur la table, coude sous l’épaule. Pieds au sol, l’un devant l’autre, jambes tendues. L’autre main sur la hanche.',cues:['Hanches hautes et en avant.','Tête, hanches et pieds bien alignés.'],knee:'Pas de torsion du genou. Si c’est gênant, pieds côte à côte.',easier:'Pieds plus près de la table.',harder:'Pieds plus loin de la table.'},
+ ph:{name:'Planche haute inclinée',short:'Planche haute',pose:'high',setup:'Mains sur le bord de la table, bras tendus, écartées largeur d’épaules. Recule les pieds, corps droit.',cues:['Pousse la table loin de toi, épaules basses.','Fessiers serrés, ventre rentré.'],knee:'Pieds à plat, jambes droites sans verrouiller.',easier:'Mains sur le plan de travail, plus haut.',harder:'Pieds plus reculés.'},
+ db:{name:'Dead bug',short:'Dead bug',pose:'deadbug',setup:'Sur le dos, sur le lit ou un tapis épais : installe-toi assis puis allonge-toi, sans passer à genoux. Genoux à 90° au-dessus des hanches, bras tendus vers le plafond.',cues:['Descends un bras derrière la tête et la jambe opposée, lentement, puis change.','Le bas du dos reste collé au sol.'],knee:'Si le genou gêne, garde les pieds posés et bouge seulement les bras.',easier:'Pieds au sol, seulement les bras.',harder:'Plus lent : 3 secondes pour descendre.'},
+ sm:{name:'Superman',short:'Superman',pose:'superman',setup:'Sur le ventre, sur le lit ou un tapis, bras tendus devant toi, front vers le sol.',cues:['Décolle doucement les bras et la poitrine, regard vers le sol.','Tiens en respirant, sans forcer sur le bas du dos.'],knee:'Si le genou tire, laisse les pieds posés.',easier:'Bras seuls, poitrine au sol.',harder:'Décolle aussi un peu les pieds.'},
+ hb:{name:'Creux jambes pliées',short:'Creux',pose:'hollow',setup:'Sur le dos, genoux pliés au-dessus des hanches. Décolle doucement les épaules, bras tendus vers les genoux.',cues:['Bas du dos plaqué au sol.','Menton rentré, respire calmement.'],knee:'Jambes pliées, pas tendues.',easier:'Pieds posés, seulement les épaules décollées.',harder:'Bras tendus au-dessus de la tête.'}
+};
+const GLV=[
+ {n:1,title:'Découverte',work:20,rest:40,rounds:2,ex:['gv','gl','db']},
+ {n:2,title:'Prise en main',work:25,rest:35,rounds:2,ex:['gv','gl','db']},
+ {n:3,title:'Nouveau mouvement',work:25,rest:35,rounds:2,ex:['gv','gl','db','sm']},
+ {n:4,title:'Stabilité',work:30,rest:30,rounds:2,ex:['gv','gl','db','sm']},
+ {n:5,title:'Corps complet',work:30,rest:30,rounds:2,ex:['gv','gl','ph','db','sm','hb']},
+ {n:6,title:'Trois tours',work:35,rest:25,rounds:3,ex:['gv','gl','ph','db','sm','hb']},
+ {n:7,title:'Endurance',work:40,rest:20,rounds:3,ex:['gv','gl','ph','db','sm','hb']},
+ {n:8,title:'Défi',work:45,rest:15,rounds:3,ex:['gv','gl','ph','db','sm','hb']}
+];
+let glvl=Math.min(8,Math.max(1,+store.get('glvl',1)||1));
+function gBuild(L){
+ const st=[{t:'warm',d:45,name:'Échauffement',sub:'Marche sur place, rotations du bassin et des épaules.',pose:GEX[L.ex[0]].pose}];
+ const holds=[];L.ex.forEach(id=>(GEX[id].side?['gauche','droit']:[null]).forEach(sd=>holds.push({id,sd})));
+ for(let r=1;r<=L.rounds;r++)holds.forEach((h,i)=>{
+  st.push({t:'work',ex:h.id,side:h.sd,d:L.work,round:r,pos:i+1,of:holds.length});
+  const last=r===L.rounds&&i===holds.length-1;
+  if(!last){const nx=holds[(i+1)%holds.length],sw=h.sd==='gauche';st.push({t:'rest',d:sw?10:L.rest,ex:nx.id,side:nx.sd,switch:sw});}
+ });
+ st.push({t:'cool',d:40,name:'Étirement',sub:'Allongé, bras au-dessus de la tête : étire-toi de tout ton long et respire.',pose:'hollow'});
+ return st;
+}
+const gDur=L=>gBuild(L).reduce((a,s)=>a+s.d,0);
+const gDone=()=>store.get('hist',[]).filter(x=>x.sid==='G');
+function gRec(){const h=gDone();for(const L of GLV)if(h.filter(x=>x.lvl===L.n).length<2)return L.n;return 8;}
+function thumb(cv,pose,t){const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth||cv.width,h=cv.clientHeight||cv.height;cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);drawScene(x,w,h,pose,t||1);}
+function openCore(){renderCore();show('core');window.scrollTo(0,0);}
+function renderCore(){
+ const L=GLV[glvl-1],rec=gRec(),h=gDone();
+ $('#gLevels').innerHTML=GLV.map(l=>`<button class="wk" aria-pressed="${l.n===glvl}" data-g="${l.n}" aria-label="Niveau ${l.n}">${l.n}</button>`).join('');
+ const k=h.filter(x=>x.lvl===L.n).length;
+ $('#gHead').innerHTML=`<span class="eyebrow">Niveau ${L.n} sur 8${L.n===rec?' · conseillé':''}${k?' · fait '+(k>1?k+' fois':'1 fois'):''}</span><h3>${L.title}</h3><p>${L.rounds} tours · ${L.work} s d’effort, ${L.rest} s de repos · ${Math.round(gDur(L)/60)} min avec l’échauffement.${L.n===rec?'':' Niveau conseillé : '+rec+'.'}</p>`;
+ $('#gStats').innerHTML=[[Math.round(gDur(L)/60)+' min','durée'],[L.work+' s','par position'],[L.rounds+' tours',L.ex.length+' exercices']].map(s=>`<div class="dstat"><b class="num">${s[0]}</b><span>${s[1]}</span></div>`).join('');
+ $('#gList').innerHTML=L.ex.map(id=>{const e=GEX[id];return `<button class="gex" data-gx="${id}"><canvas class="gth" data-pose="${e.pose}" aria-hidden="true"></canvas><span style="min-width:0"><strong>${e.name}</strong><small>${e.side?'Côté gauche, puis côté droit · ':''}${L.work} s</small></span></button>`;}).join('');
+ requestAnimationFrame(()=>document.querySelectorAll('#gList canvas').forEach(c=>thumb(c,c.dataset.pose,1.5)));
+}
+$('#gLevels').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;glvl=+b.dataset.g;store.set('glvl',glvl);renderCore();});
+$('#gBack').addEventListener('click',()=>show('home'));
+$('#gStart').addEventListener('click',()=>gStart(glvl));
+$('#gList').addEventListener('click',e=>{const b=e.target.closest('[data-gx]');if(b)openGTuto(b.dataset.gx);});
+let gTutoRaf=0;
+function openGTuto(id){
+ lastFocus=document.activeElement;const e=GEX[id];
+ $('#sheetIn').innerHTML=`<div class="grab"></div>
+ <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><div style="min-width:0;display:flex;flex-direction:column;gap:8px"><span class="eyebrow">Gainage${e.side?' · côté gauche puis droit':''}</span><h2 id="tTitle">${e.name}</h2></div><button class="icon" id="tClose" aria-label="Fermer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+ <canvas class="gprev" id="gTutoCv" aria-label="Démonstration animée : ${e.name}"></canvas>
+ <div class="blk"><h4>Installation</h4><p>${e.setup}</p></div>
+ <div class="blk"><h4>Pendant l’effort</h4><ol>${e.cues.map(c=>`<li><span>${c}</span></li>`).join('')}</ol></div>
+ <div class="knee"><b>Genou · </b>${e.knee}</div>
+ <div class="duo"><div><b style="color:var(--muted)">Plus facile</b>${e.easier}</div><div><b style="color:var(--muted)">Plus dur</b>${e.harder}</div></div>`;
+ $('#scrim').hidden=false;$('#sheet').hidden=false;document.documentElement.style.overflow='hidden';$('#sheet').scrollTop=0;
+ $('#tClose').addEventListener('click',closeTuto);
+ const cv=$('#gTutoCv'),t0=performance.now();cancelAnimationFrame(gTutoRaf);
+ const loop=()=>{if($('#sheet').hidden||!document.body.contains(cv))return;const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;
+  if(cv.width!==Math.round(w*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}const x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);drawScene(x,w,h,e.pose,(performance.now()-t0)/1000);gTutoRaf=requestAnimationFrame(loop);};
+ gTutoRaf=requestAnimationFrame(loop);
+}
+
+/* ---------- Gainage : lecteur ---------- */
+let GP=null,gLastTap=0;
+const gNow=()=>GP?((GP.pausedAt||Date.now())-GP.stepStart-GP.stepPaused)/1000:0;
+const gTotal=()=>GP?((GP.pausedAt||Date.now())-GP.start-GP.pausedAcc)/1000:0;
+function gStart(n){
+ const L=GLV[n-1];ensureAudio();lockScreen();
+ if(GP){clearInterval(GP.timer);cancelAnimationFrame(GP.raf);}
+ GP={L,steps:gBuild(L),i:0,start:Date.now(),pausedAt:null,pausedAcc:0,stepStart:Date.now(),stepPaused:0,said:{},raf:0,timer:0};
+ $('#gTitle').textContent='Gainage · niveau '+n;$('#gDone').hidden=true;$('#gQuit').hidden=true;
+ $('#gSegs').innerHTML=GP.steps.map((s,i)=>s.t==='work'?`<i data-i="${i}"></i>`:'').join('');
+ $('#gPlayer').hidden=false;document.body.style.overflow='hidden';gPaintVoice();
+ say('Gainage, niveau '+n+'. Échauffement.');gEnter(0);
+ GP.timer=setInterval(gTick,200);GP.raf=requestAnimationFrame(gDraw);
+}
+function gEnter(i){
+ if(!GP)return;if(i>=GP.steps.length){gFinish(true);return;}
+ GP.i=Math.max(0,i);GP.stepStart=Date.now();GP.stepPaused=0;GP.said={};
+ if(GP.pausedAt){GP.pausedAcc+=Date.now()-GP.pausedAt;GP.pausedAt=null;}
+ const s=GP.steps[GP.i];
+ if(s.t==='work'){goBeep();const e=GEX[s.ex];say((s.side?'Côté '+s.side+'. ':'')+'C’est parti. '+e.cues[0],250);}
+ else if(s.t==='rest'){endBeep();const e=GEX[s.ex];say(s.switch?'Change de côté.':'Repos. Ensuite : '+e.name+(s.side?', côté '+s.side:'')+'.',350);}
+ else if(s.t==='cool'){endBeep();say('Dernière étape : étirement.',350);}
+ gPaint();
+}
+function gTick(){
+ if(!GP||GP.pausedAt)return;const s=GP.steps[GP.i],e=gNow(),left=Math.ceil(s.d-e);
+ if(s.t==='work'){
+  if(s.d>=20&&e>=s.d/2&&!GP.said.mid){GP.said.mid=1;say('Mi-temps. '+GEX[s.ex].cues[1]);}
+  if(left<=5&&left>=1&&!GP.said['c'+left]){GP.said['c'+left]=1;if(left<=3)tick3();say(String(left));}
+ }else if(left<=3&&left>=1&&!GP.said['c'+left]){GP.said['c'+left]=1;tick3();}
+ if(e>=s.d){gEnter(GP.i+1);return;}
+ gPaint();
+}
+function gPaint(){
+ if(!GP)return;const s=GP.steps[GP.i],e=Math.min(gNow(),s.d),left=Math.max(0,Math.ceil(s.d-e)),pl=$('#gPlayer');
+ pl.dataset.mode=s.t==='work'?'effort':s.t==='rest'?'rest':'calm';
+ const ex=s.ex?GEX[s.ex]:null;
+ $('#gChip').textContent=s.t==='work'?`Tour ${s.round}/${GP.L.rounds} · ${s.pos}/${s.of}`:s.t==='rest'?(s.switch?'Change de côté':'Repos'):s.t==='warm'?'Échauffement':'Retour au calme';
+ $('#gName').textContent=s.t==='work'||s.t==='rest'?ex.name:s.name;
+ $('#gSide').textContent=s.side?'Côté '+s.side:'';$('#gSide').hidden=!s.side;
+ $('#gBig').textContent=left>59?fmt(left):String(left);
+ $('#gBig').classList.toggle('pulse',left<=3&&!GP.pausedAt);
+ $('#gUnit').textContent=GP.pausedAt?'en pause':s.t==='work'?'secondes · tiens':s.t==='rest'?'secondes · récupère':'secondes';
+ $('#gTip').textContent=s.t==='work'?(e<s.d/2?ex.cues[0]:ex.cues[1]):s.t==='rest'?'Ensuite : '+ex.name+(s.side?' · côté '+s.side:''):s.sub;
+ $('#gElapsed').textContent=fmt2(gTotal());
+ document.querySelectorAll('#gSegs i').forEach(n=>{const k=+n.dataset.i;n.className=k<GP.i?'on':k===GP.i?'now':'';});
+ $('#gIcoPause').hidden=!!GP.pausedAt;$('#gIcoPlay').hidden=!GP.pausedAt;$('#gPlay').setAttribute('aria-label',GP.pausedAt?'Reprendre':'Pause');
+}
+function gDraw(){
+ if(!GP||$('#gPlayer').hidden)return;const cv=$('#gCanvas'),dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;
+ if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}
+ const s=GP.steps[GP.i],pose=s.ex?GEX[s.ex].pose:s.pose,x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);
+ drawScene(x,w,h,pose,GP.pausedAt?1:gNow()+1,{dim:s.t!=='work',accent:s.t==='rest'?'#4FC3F7':'#FF6A3D'});
+ GP.raf=requestAnimationFrame(gDraw);
+}
+function gPause(){if(!GP||GP.pausedAt)return;GP.pausedAt=Date.now();hush();gPaint();}
+function gResume(){if(!GP||!GP.pausedAt)return;const d=Date.now()-GP.pausedAt;GP.pausedAcc+=d;GP.stepPaused+=d;GP.pausedAt=null;gPaint();}
+function gFinish(done){
+ if(!GP)return;clearInterval(GP.timer);const dur=Math.round(gTotal()),full=gDur(GP.L);GP.pausedAt=GP.pausedAt||Date.now();hush();
+ const ok=dur>=full*.8;if(ok){const h=store.get('hist',[]);h.push({sid:'G',lvl:GP.L.n,date:new Date().toISOString(),dur,week,cycle});store.set('hist',h.slice(-120));}
+ if(done)endBeep();say(ok?'Bravo, gainage terminé.':'Séance arrêtée.',400);
+ $('#gDoneT').textContent=ok?'Bravo':'Séance arrêtée';
+ $('#gDoneP').textContent=ok?`Niveau ${GP.L.n} · ${GP.L.title} · ${durTxt(dur)}. ${gRec()>GP.L.n?'Le niveau '+gRec()+' est débloqué : c’est ton prochain conseillé.':'Refais ce niveau encore une fois avant de passer au suivant.'}`:'Moins de 80 % de la séance : elle n’est pas comptée cette fois.';
+ $('#gQuit').hidden=true;$('#gDone').hidden=false;unlockScreen();
+}
+function gClose(){if(!GP)return;clearInterval(GP.timer);cancelAnimationFrame(GP.raf);hush();GP=null;$('#gPlayer').hidden=true;document.body.style.overflow='';unlockScreen();renderHome();if(!$('#v-core').hidden)renderCore();}
+function gPaintVoice(){$('#gVoice').setAttribute('aria-pressed',String(sound));$('#gVoice').setAttribute('aria-label',sound?'Couper le son':'Activer le son');}
+$('#gPlay').addEventListener('click',()=>{if(!GP)return;const t=Date.now();if(t-gLastTap<450)return;gLastTap=t;ensureAudio();GP.pausedAt?gResume():gPause();});
+$('#gSkip').addEventListener('click',()=>{if(GP){ensureAudio();gEnter(GP.i+1);}});
+$('#gPrev').addEventListener('click',()=>{if(GP)gEnter(GP.i-1);});
+$('#gVoice').addEventListener('click',()=>{sound=!sound;store.set('sound',sound);if(!sound)hush();ensureAudio();gPaintVoice();paintSound();});
+$('#gClose').addEventListener('click',()=>{if(!GP)return;if(!$('#gDone').hidden){gClose();return;}GP.wasPaused=!!GP.pausedAt;gPause();$('#gQuit').hidden=false;});
+$('#gStay').addEventListener('click',()=>{$('#gQuit').hidden=true;if(GP&&!GP.wasPaused)gResume();});
+$('#gStop').addEventListener('click',()=>gFinish(false));
+$('#gBack2').addEventListener('click',gClose);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&GP&&!$('#gPlayer').hidden){lockScreen();try{actx&&actx.state!=='running'&&actx.resume();}catch(e){}}});
+
 /* ---------- Navigation ---------- */
 function show(v){
- ['home','detail','medit','prog','guides'].forEach(k=>$('#v-'+k).hidden=k!==v);
+ ['home','detail','core','medit','prog','guides'].forEach(k=>$('#v-'+k).hidden=k!==v);
  if(v==='medit')renderMedit();
  if(v==='prog')renderProg();
- const tab=v==='detail'?'home':v;
+ const tab=v==='detail'||v==='core'?'home':v;
  document.querySelectorAll('.nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===tab?'page':'false'));
 }
 document.querySelector('.nav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;show(b.dataset.v);window.scrollTo(0,0);});
